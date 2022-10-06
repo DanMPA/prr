@@ -1,0 +1,127 @@
+@startuml name
+
+
+class Client{
+    - _clientName : String
+    - _clientID : int
+    - _clientTaxNumber : int
+    - _debtToPay : long
+    - _debtPayed : long
+    --
+    + registerClient() : void
+    + isFriendOfCleint() : boolean
+    + payReceipts() : void
+    - calculatePaymentDue() : long
+    - calculatePaymentPayed() : long
+}
+
+
+abstract class Terminal{
+    - _terminalID : int
+    - _notificationAllowed : boolean
+    + Terminal(termianlId : int)
+    + startAudioCall() : void
+    + endAudioCall() : long
+    + sendMessage() : long 
+}
+
+class BasicTerminal{
+    + BasicTerminal()
+
+}
+
+class FancyTerminal{
+    + FancyTerminal()
+    + startVideoCall() : void
+    + endVideoCall() : long
+}
+
+abstract class ClientType{
+    + ClientType()
+    + calclateValueToPay(communication : CommunicationType, freinds : boolean) : Receipt
+    + upgradeClient() : ClientType
+    + downgradeClient() : ClientType
+}
+
+class Normal{
+    + Normal()
+
+}
+class Gold{
+    + Gold()
+}
+class Platinum{
+    + Platium()
+}
+
+enum TerminalStatus{
+    + WATING
+    + SILENT
+    + OCCUPIED
+    + OFF
+}
+
+class Notifications{
+    - terminalFrom : int
+    - terminalTo : int
+    + Notifications(termianlFrom : int, terminalTo : int);
+}
+
+class NetworkManager{
+    - _networkFile : String
+    + NetworkManager()
+}
+
+class Network{
+    + Network()
+    + getAllClients() : Client[]
+    + getAllTerminals() : Terminal[]
+}
+
+class Receipt{
+    - _terminalID : int
+    - _valueToPay : long 
+    - _payed : boolean
+    + Receipt(terminalID : int, valueToPay: long)
+}
+
+class Communications{
+    + Communications(typeOfCommunication :communicationType)
+    + calclateReceipt()
+}
+
+enum CommunicationType{
+    + Message
+    + AudioCall
+    + VideoCall
+}
+
+Client --->  Terminal : -_accociatedTerminals[]
+Client -right> ClientType : -_clientType
+Client --> Receipt : -_clientRecites[]
+Client <--> Notifications : - _logNotifications[]
+
+Normal --up|> ClientType
+Gold --up|> ClientType
+Platinum --up|> ClientType
+
+Terminal ---> Client : - _terminalClient
+Terminal "1..*" --->  Terminal : - _accociatedFriends[]
+Terminal "1" --> TerminalStatus : - _terminalStatus
+Terminal --> Communications : -logCommunications[]
+
+Terminal <|-- BasicTerminal
+Terminal <|-- FancyTerminal
+
+Receipt -> CommunicationType : - _communicationType
+
+Notifications ----down> CommunicationType : - _communicationType
+Communications  ---> CommunicationType :   - _communicationType
+
+Network *->  NetworkManager : - _theNetwork
+NetworkManager *-d-> Terminal : - _allTerminals[]
+NetworkManager -> "*" Client : - _allClients[]
+NetworkManager - Communications
+
+
+@enduml
