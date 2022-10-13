@@ -9,6 +9,13 @@ import java.io.Serializable;
  */
 abstract public class Terminal implements Serializable /* FIXME maybe addd more interfaces */{
 
+  private String _id;
+  private String _mode;
+  private double _debt;
+  private double _payments;
+  private TerminalMode _terminalMode;
+  private Terminal _frinds[];
+
   /** Serial number for serialization. */
   private static final long serialVersionUID = 202208091753L;
   
