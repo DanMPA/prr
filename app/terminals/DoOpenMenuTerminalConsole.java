@@ -14,6 +14,7 @@ class DoOpenMenuTerminalConsole extends Command<Network> {
   DoOpenMenuTerminalConsole(Network receiver) {
     super(Label.OPEN_MENU_TERMINAL, receiver);
     //FIXME add command fields
+    
   }
 
   @Override

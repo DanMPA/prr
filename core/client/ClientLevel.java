@@ -1,4 +1,4 @@
-package prr.core;
+package prr.core.client;
 
 public enum ClientLevel {
     NORMAL,
