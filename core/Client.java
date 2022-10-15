@@ -7,11 +7,11 @@ public class Client {
     private ClientLevel _level;
     private boolean _receiveNotification;
 
-public Client(String _key, String _name, int _taxNumber, ClientLevel _level) {
-    this._key = _key;
-    this._name = _name;
-    this._taxNumber = _taxNumber;
-    this._level = _level;
-} 
-
+public Client(String _key, String _name, int _taxNumber, ClientLevel _level, boolean _receiveNotification) {
+        this._key = _key;
+        this._name = _name;
+        this._taxNumber = _taxNumber;
+        this._level = _level;
+        this._receiveNotification = _receiveNotification;
+    }
 }
