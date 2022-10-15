@@ -1,14 +1,14 @@
 package prr.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.Vector;
 import java.io.IOException;
 
 import prr.app.exception.DuplicateClientKeyException;
+import prr.app.exception.UnknownClientKeyException;
 import prr.core.client.Client;
 import prr.core.client.ClientLevel;
 import prr.core.exception.UnrecognizedEntryException;
@@ -36,11 +36,29 @@ public class Network implements Serializable {
     if(!_clients.add(tempClient)){
       throw new DuplicateClientKeyException(key);
     }
-    
     return true;
-
   }
 
+  public Client findClient(String key) throws UnknownClientKeyException{
+    for (Client client : _clients) {
+      if(client.get_key() == key){
+        return client;
+      }
+    }
+    throw new UnknownClientKeyException(key);
+  }
+
+  public String showClient(String key) throws UnknownClientKeyException{
+    return findClient(key).toString();
+  }
+
+  public Collection<String> showAllClients(){
+    List<String> allClients = new Vector<>(); 
+    for (Client client : _clients) {
+      allClients.add(client.toString());
+    }
+    return allClients;
+  }
 
 
   /**
