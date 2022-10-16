@@ -41,7 +41,7 @@ public class Network implements Serializable {
 
   public Client findClient(String key) throws UnknownClientKeyException{
     for (Client client : _clients) {
-      if(client.get_key() == key){
+      if(client.get_key().equals(key)){
         return client;
       }
     }
@@ -59,6 +59,24 @@ public class Network implements Serializable {
     }
     return allClients;
   }
+
+  public Collection<String> showNotificaions(String key) throws UnknownClientKeyException{
+    Client tempClient = findClient(key);
+    return tempClient.getNotifcations();
+  }
+
+  public boolean toggleNotificationStatus(String key, boolean status) throws UnknownClientKeyException{  
+    Client client = findClient(key);
+    if(client.is_receiveNotification() == status){
+      return false;
+    } else {
+      client.set_receiveNotification(status);
+      return true;
+    }
+  } 
+
+  
+
 
 
   /**

@@ -24,7 +24,7 @@ interface Message {
     return "Valores para o cliente '\" + key + \"':" + payments + " (pagamentos),  " + debts + " (dívidas).";
   }
   
-  /** @return prompt for a client identifier */
+  /** @return prompt for a client identifier */ 
   static String key() {
     return "Identificador do cliente: ";
   }

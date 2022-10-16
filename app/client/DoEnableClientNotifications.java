@@ -4,20 +4,26 @@ import prr.core.Network;
 import prr.app.exception.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME add more imports if needed
 
 /**
  * Enable client notifications.
  */
 class DoEnableClientNotifications extends Command<Network> {
-
+  final private String CLIENT_ID = "ClientID";
   DoEnableClientNotifications(Network receiver) {
     super(Label.ENABLE_CLIENT_NOTIFICATIONS, receiver);
-    //FIXME add command fields
+    addStringField("ClientID", Message.key());
   }
   
   @Override
   protected final void execute() throws CommandException {
-    //FIXME implement command
+    try{
+      if(!_receiver.toggleNotificationStatus(stringField(CLIENT_ID),true)){
+        _display.add(Message.clientNotificationsAlreadyEnabled());
+        _display.display();
+      };
+    } catch(UnknownClientKeyException ex){
+      _display.popup(ex);
+    }
   }
 }

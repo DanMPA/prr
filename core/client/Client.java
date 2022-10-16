@@ -2,47 +2,51 @@ package prr.core.client;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 
 public class Client {
-    private String _key; 
-    private String _name; 
-    private int _taxNumber; 
+    private String _key;
+    private String _name;
+    private int _taxNumber;
     private ClientLevel _level;
     private boolean _receiveNotification;
+    private Collection<Notification> _terminalNotifications;
     private Collection<Terminal> _associatedTerminals;
     private double _payments;
     private double _debts;
 
-
     public Client(String _key, String _name, int _taxNumber, ClientLevel _level, boolean _receiveNotification) {
-            this._key = _key;
-            this._name = _name;
-            this._taxNumber = _taxNumber;
-            this._level = _level;
-            this._receiveNotification = _receiveNotification;
-            this._associatedTerminals = new ArrayList<>();
+        this._key = _key;
+        this._name = _name;
+        this._taxNumber = _taxNumber;
+        this._level = _level;
+        this._receiveNotification = _receiveNotification;
+        this._associatedTerminals = new ArrayList<>();
+        this._terminalNotifications = new ArrayList<>();
     }
 
     @Override
     public String toString() {
-        String baseClienString = "Client|"+_key + "|" + _name + 
-            "|" + _taxNumber + "|" + _level + "|";
+        String baseClienString = "Client|" + _key + "|" + _name +
+                "|" + _taxNumber + "|" + _level + "|" + _associatedTerminals.size() + "|";
 
-        if(_receiveNotification){
+        if (_receiveNotification) {
             baseClienString += "YES|";
         } else {
             baseClienString += "NO|";
         }
-        if(_payments == 0){
+        if (_payments == 0) {
             baseClienString += "0|";
         }
-        if(_debts == 0 ){
+        if (_debts == 0) {
             baseClienString += "0|";
         }
         return baseClienString;
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -59,7 +63,7 @@ public class Client {
             return false;
         if (getClass() != obj.getClass())
             return false;
-  
+
         Client other = (Client) obj;
         if (_key == null) {
             if (other._key != null)
@@ -73,5 +77,29 @@ public class Client {
         return _key;
     }
 
+    public boolean is_receiveNotification() {
+        return _receiveNotification;
+    }
 
+    public void set_receiveNotification(boolean _receiveNotification) {
+        this._receiveNotification = _receiveNotification;
+    }
+
+    public double get_payments() {
+        return _payments;
+    }
+
+    public double get_debts() {
+        return _debts;
+    }
+
+    public Collection<String> getNotifcations(){
+        List<String> tempNotifications = new ArrayList<>();
+        if(_receiveNotification){
+            for (Notification notification : _terminalNotifications) {
+                tempNotifications.add(notification.toString());
+            }
+        }
+        return tempNotifications;
+    }
 }

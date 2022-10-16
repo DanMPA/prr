@@ -1,6 +1,9 @@
 package prr.app.client;
 
 import prr.core.Network;
+
+import java.util.Collection;
+
 import prr.app.exception.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
@@ -10,15 +13,23 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClient extends Command<Network> {
 
+  final private String CLIENT_ID = "ClientID";
+
   DoShowClient(Network receiver) {
     super(Label.SHOW_CLIENT, receiver);
-    addStringField("ClientID", Message.key());
+    addStringField(CLIENT_ID, Message.key());
   }
   
   @Override
   protected final void execute() throws CommandException {
     try{
-      _receiver.showClient(stringField("ClientID"));
+      String clientId = stringField(CLIENT_ID);
+      String client = _receiver.showClient(clientId);
+      Collection<String> clientNotifications= _receiver.showNotificaions(clientId);
+      _display.add(client);
+      _display.addAll(clientNotifications);
+      _display.display();
+      
     } catch(UnknownClientKeyException ex){
       _display.popup(ex);
     }
