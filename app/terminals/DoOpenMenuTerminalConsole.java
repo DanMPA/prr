@@ -22,5 +22,6 @@ class DoOpenMenuTerminalConsole extends Command<Network> {
     //FIXME implement command
     // create an instance of prr.app.terminal.Menu with the
     // selected Terminal and open it
+	
   }
 }

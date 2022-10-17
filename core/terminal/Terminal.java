@@ -8,9 +8,7 @@ import prr.core.client.Client;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable /* FIXME maybe addd more interfaces */{
-
-  /** Serial number for serialization. */
+abstract public class Terminal implements Serializable {
   private static final long serialVersionUID = 202208091753L;
 	
 	private String _id;
@@ -19,9 +17,12 @@ abstract public class Terminal implements Serializable /* FIXME maybe addd more 
 	private TerminalMode _mode;
   private Terminal[] _frindsTerminal;
   private Client _owner;
-
-
   
+  public Terminal(String _id, Client _owner) {
+    this._id = _id;
+    this._owner = _owner;
+  }
+
   /**
    * Checks if this terminal can start a new communication.
    *
@@ -107,5 +108,6 @@ abstract public class Terminal implements Serializable /* FIXME maybe addd more 
       return false;
     return true;
   }
+
 
 }

@@ -1,6 +1,7 @@
 package prr.app.client;
 
 import prr.core.Network;
+import prr.core.exception.UnknowKeyException;
 import prr.app.exception.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
@@ -22,8 +23,8 @@ class DoEnableClientNotifications extends Command<Network> {
         _display.add(Message.clientNotificationsAlreadyEnabled());
         _display.display();
       };
-    } catch(UnknownClientKeyException ex){
-      _display.popup(ex);
-    }
+    } catch(UnknowKeyException ex){
+		throw new UnknownClientKeyException(stringField(CLIENT_ID));
+	}
   }
 }
