@@ -2,7 +2,7 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.temporal.TemporalField;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -127,7 +127,6 @@ public class Network implements Serializable {
 		}
 		return allTerminals;
 	}
-	
 	
 	/**
 	 * Read text input file and create corresponding domain entities.

@@ -24,14 +24,10 @@ class DoOpenMenuTerminalConsole extends Command<Network> {
 	protected final void execute() throws CommandException {
 		try {
 			Terminal terminal = _receiver.findTerminal(stringField("terminalKey"));
-			new Menu(_receiver, terminal);
+			Menu subMenu =  new Menu(_receiver, terminal);
+			subMenu.open();
 		} catch (UnknowKeyException ex) {
 			throw new UnknownTerminalKeyException(stringField("terminalKey"));
 		}
-
-		// FIXME implement command
-		// create an instance of prr.app.terminal.Menu with the
-		// selected Terminal and open it
-
 	}
 }

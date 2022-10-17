@@ -1,15 +1,15 @@
 package prr.core.terminal;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TreeSet;
 
 import prr.core.client.Client;
 
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable {
+abstract public class Terminal implements Serializable{
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _id;
@@ -23,7 +23,7 @@ abstract public class Terminal implements Serializable {
 		this._id = _id;
 		this._owner = _owner;
 		this._mode = TerminalMode.IDLE;
-		this._terminalFrinds = new ArrayList<String>();
+		this._terminalFrinds = new TreeSet<String>();
 	}
 
 	/**
@@ -74,20 +74,25 @@ abstract public class Terminal implements Serializable {
 
 	}
 
-	public boolean setToIdle() {
-		return false;
+	public void addFriend(String frientTerminalKey){
+		_terminalFrinds.add(frientTerminalKey);
 	}
 
-	public boolean setToSilent() {
-		return false;
+	public void removeFriend(String frientTerminalKey){
+		_terminalFrinds.remove(frientTerminalKey);
 	}
 
-	public boolean setToOff() {
-		return false;
+	public boolean changeTerminalMode(TerminalMode newMode) {
+		if (_mode.equals(newMode)) {
+			return false;
+		} else {
+			_mode = newMode;
+			return true;
+		}
 	}
 
-	public boolean turnOff() {
-		return false;
+	public String get_id() {
+		return _id;
 	}
 
 	@Override
@@ -121,11 +126,23 @@ abstract public class Terminal implements Serializable {
 		String paymentsString = String.format("%.2f", _payments);
 		String debtString = String.format("%.2f", _debt);
 		tempString = String.join("|", _id, _owner.get_key(), _mode.toString(), paymentsString, debtString);
+		tempString += "|";
+		tempString += String.join(",", _terminalFrinds);
 		return tempString;
 
 	}
 
-	public String get_id() {
-		return _id;
-	}
+	// @Override
+	// public int compareTo(Object o){
+	// 	if(o instanceof Terminal){
+	// 		Terminal terminl2 = (Terminal)o;
+	// 		try{
+	// 			return Integer.valueOf(this._id) - Integer.valueOf(terminl2.get_id());
+	// 		} catch (NumberFormatException ex){
+	// 			return 0;
+	// 		}
+	// 	}
+	// 	return 0;
+	// }
+
 }
