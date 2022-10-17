@@ -2,6 +2,7 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.temporal.TemporalField;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -38,7 +39,7 @@ public class Network implements Serializable {
 	public boolean registerClient(String key, String name, int taxNumber) throws DuplicateEntityKeyException {
 		Client tempClient = new Client(key, name, taxNumber, ClientLevel.NORMAL, true);
 		if (!_clients.add(tempClient)) {
-			throw new DuplicateEntityKeyException();
+			throw new DuplicateEntityKeyException(key);
 		}
 		return true;
 	}
@@ -49,7 +50,7 @@ public class Network implements Serializable {
 				return client;
 			}
 		}
-		throw new UnknowKeyException();
+		throw new UnknowKeyException(key);
 	}
 
 	public String showClient(String key) throws UnknowKeyException {
@@ -79,6 +80,15 @@ public class Network implements Serializable {
 		}
 	}
 
+	public Terminal findTerminal(String key) throws UnknowKeyException{
+		for(Terminal tempTerminal : _terminals){
+			if(tempTerminal.get_id().equals(key)){
+				return tempTerminal;
+			}
+		}
+		throw new UnknowKeyException(key);
+	}
+
 	public boolean validTerminalID(String id) throws UnknowKeyException {
 		return Pattern.matches("[0-9]{6}", id);
 	}
@@ -92,24 +102,33 @@ public class Network implements Serializable {
 				case "BASIC":
 					tempTerminal = new BasicTerminal(key, tempClient);
 					if (!_terminals.add(tempTerminal)) {
-						throw new DuplicateEntityKeyException();
+						throw new DuplicateEntityKeyException(key);
 					}
 					return true;
 				case "FANCY":
 					tempTerminal = new FancyTerminal(key, tempClient);
 					if (!_terminals.add(tempTerminal)) {
-						throw new DuplicateEntityKeyException();
+						throw new DuplicateEntityKeyException(key);
 					}
 					return true;
 				default:
 					return false;
 			}
 		} else {
-			throw new KeyFormattingExeption();
+			throw new KeyFormattingExeption(key);
 		}
 
 	}
 
+	public Collection<String> showAllTerminals(){
+		List<String> allTerminals = new Vector<>();
+		for(Terminal terminal : _terminals){
+			allTerminals.add(terminal.toString());
+		}
+		return allTerminals;
+	}
+	
+	
 	/**
 	 * Read text input file and create corresponding domain entities.
 	 * 

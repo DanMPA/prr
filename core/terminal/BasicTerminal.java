@@ -14,4 +14,10 @@ public class BasicTerminal extends Terminal{
     boolean accepVideoCall(){
         return false;
     }
+
+	@Override
+	public String toString() {
+		String temp = super.toString();
+		return String.join("|", "BASIC",temp); 
+	}
 }
