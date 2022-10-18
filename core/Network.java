@@ -140,3 +140,13 @@ public class Network implements Serializable {
 		// FIXME implement method
 	}
 }
+
+public Collection<String> terminalsWithoutCommunications(){
+		List<String> terminalsWithoutCommunications = new Vector<>();
+		for (Terminal terminal : _terminals){
+			if(terminal.numberCommunications() == 0){
+				terminalsWithoutCommunications.add(terminal.toString());
+			}
+		}
+		return terminalsWithoutCommunications;
+}

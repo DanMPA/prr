@@ -18,6 +18,7 @@ abstract public class Terminal implements Serializable{
 	private TerminalMode _mode;
 	private Collection<String> _terminalFrinds;
 	private Client _owner;
+	private int _numberCommunications;
 
 	public Terminal(String _id, Client _owner) {
 		this._id = _id;
@@ -42,6 +43,15 @@ abstract public class Terminal implements Serializable{
 	 *         communication) and
 	 *         it was the originator of this communication.
 	 **/
+
+	public void addCommunication(){
+		_numberCommunications += 1;
+	}
+
+	public int numberCommunications(){
+		return _numberCommunications;
+	}
+
 	public boolean canEndCommunication() {
 		return true;
 	}
