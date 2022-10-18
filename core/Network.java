@@ -93,7 +93,7 @@ public class Network implements Serializable {
 		return Pattern.matches("[0-9]{6}", id);
 	}
 
-	public boolean registerTerminal(String key, String clientID, String type) throws UnknowKeyException,
+	public Terminal registerTerminal(String key, String clientID, String type) throws UnknowKeyException,
 			DuplicateEntityKeyException, KeyFormattingExeption {
 		if (validTerminalID(key)) {
 			Client tempClient = findClient(clientID);
@@ -104,15 +104,15 @@ public class Network implements Serializable {
 					if (!_terminals.add(tempTerminal)) {
 						throw new DuplicateEntityKeyException(key);
 					}
-					return true;
+					return tempTerminal;
 				case "FANCY":
 					tempTerminal = new FancyTerminal(key, tempClient);
 					if (!_terminals.add(tempTerminal)) {
 						throw new DuplicateEntityKeyException(key);
 					}
-					return true;
+					return tempTerminal;
 				default:
-					return false;
+					return null;
 			}
 		} else {
 			throw new KeyFormattingExeption(key);

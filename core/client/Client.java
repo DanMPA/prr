@@ -1,5 +1,6 @@
 package prr.core.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -7,7 +8,9 @@ import java.util.List;
 import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 
-public class Client {
+public class Client  implements Serializable {
+	private static final long serialVersionUID = 202208091753L;
+
 	private String _key;
 	private String _name;
 	private int _taxNumber;

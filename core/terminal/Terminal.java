@@ -22,7 +22,7 @@ abstract public class Terminal implements Serializable{
 	public Terminal(String _id, Client _owner) {
 		this._id = _id;
 		this._owner = _owner;
-		this._mode = TerminalMode.IDLE;
+		this._mode = TerminalMode.ON;
 		this._terminalFrinds = new TreeSet<String>();
 	}
 

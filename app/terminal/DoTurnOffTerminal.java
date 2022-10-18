@@ -11,14 +11,14 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoTurnOffTerminal extends TerminalCommand {
 
-  DoTurnOffTerminal(Network context, Terminal terminal) {
-    super(Label.POWER_OFF, context, terminal);
-  }
-  
-  @Override
-  protected final void execute() throws CommandException {
-	if(!_receiver.changeTerminalMode(TerminalMode.OFF)){
-		_display.popup(Message.alreadyOff());
+	DoTurnOffTerminal(Network context, Terminal terminal) {
+		super(Label.POWER_OFF, context, terminal);
 	}
-}
+
+	@Override
+	protected final void execute() throws CommandException {
+		if (!_receiver.changeTerminalMode(TerminalMode.OFF)) {
+			_display.popup(Message.alreadyOff());
+		}
+	}
 }
