@@ -10,12 +10,16 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllCommunications extends Command<Network> {
 
-  DoShowAllCommunications(Network receiver) {
-    super(Label.SHOW_ALL_COMMUNICATIONS, receiver);
-  }
+	DoShowAllCommunications(Network receiver) {
+		super(Label.SHOW_ALL_COMMUNICATIONS, receiver);
+	}
 
-  @Override
-  protected final void execute() throws CommandException {
-    //FIXME implement command
-  }
+	
+	/** 
+	 * @throws CommandException
+	 */
+	@Override
+	protected final void execute() throws CommandException {
+		_display.popup(_receiver.showTerminalsWithoutCommunications());
+	}
 }

@@ -1,11 +1,11 @@
 package prr.core;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import prr.core.exception.ImportFileException;
 import prr.core.exception.MissingFileAssociationException;
@@ -19,7 +19,7 @@ public class NetworkManager {
 
 	/** The network itself. */
 	private Network _network = new Network();
-	private String _fileName;
+	private String _fileName = "";
 
 	public Network getNetwork() {
 		return _network;
@@ -88,5 +88,13 @@ public class NetworkManager {
 		} catch (IOException | UnrecognizedEntryException /* FIXME maybe other exceptions */ e) {
 			throw new ImportFileException(filename, e);
 		}
+	}
+
+	public boolean hasFileName(){
+		return !_fileName.isEmpty();
+	}
+	
+	public String get_fileName() {
+		return _fileName;
 	}
 }

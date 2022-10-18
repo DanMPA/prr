@@ -8,7 +8,7 @@ import java.util.List;
 import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 
-public class Client  implements Serializable {
+public class Client implements Serializable {
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _key;
@@ -33,21 +33,9 @@ public class Client  implements Serializable {
 
 	@Override
 	public String toString() {
-		String baseClienString = String.join("|","Client",_key, _name, String.valueOf(_taxNumber), _level.toString(),
-				String.valueOf(_associatedTerminals.size()));
-		baseClienString += "|";
-		if (_receiveNotification) {
-			baseClienString += "YES|";
-		} else {
-			baseClienString += "NO|";
-		}
-		if (_payments == 0) {
-			baseClienString += "0|";
-		}
-		if (_debts == 0) {
-			baseClienString += "0|";
-		}
-		return baseClienString;
+		return String.join("|", "CLIENT", _key, _name, String.valueOf(_taxNumber), _level.toString(),
+				(_receiveNotification ? "YES" : "NO"), String.valueOf(_associatedTerminals.size()),
+				String.format("%.0f", _payments), String.format("%.0f", _debts));
 	}
 
 	@Override

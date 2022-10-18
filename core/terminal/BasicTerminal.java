@@ -11,10 +11,18 @@ public class BasicTerminal extends Terminal{
     public void makeVideoCall(){        
     }
     
-    boolean accepVideoCall(){
+    
+	/** 
+	 * @return boolean
+	 */
+	boolean accepVideoCall(){
         return false;
     }
 
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		String temp = super.toString();

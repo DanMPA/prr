@@ -8,6 +8,9 @@ import java.io.BufferedReader;
 import java.util.Collection;
 import java.util.ArrayList;
 
+import prr.core.exception.DuplicateEntityKeyException;
+import prr.core.exception.KeyFormattingExeption;
+import prr.core.exception.UnknowKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 // import more exception core classes if needed
 import prr.core.terminal.Terminal;
@@ -63,7 +66,7 @@ public class Parser {
       _network.registerClient(components[1], components[2], taxNumber);
     } catch (NumberFormatException nfe) {
       throw new UnrecognizedEntryException("Invalid number in line " + line, nfe);
-    } catch (OtherException e) {
+    } catch (DuplicateEntityKeyException e) {
       throw new UnrecognizedEntryException("Invalid specification in line: " + line, e);
     }
   }
@@ -82,7 +85,7 @@ public class Parser {
            throw new UnrecognizedEntryException("Invalid specification in line: " + line);
         } 
       }
-    } catch (SomeOtherException e) {
+    } catch (UnknowKeyException| DuplicateEntityKeyException | KeyFormattingExeption e) {
       throw new UnrecognizedEntryException("Invalid specification: " + line, e);
     }
   }
@@ -96,8 +99,8 @@ public class Parser {
       String[] friends = components[2].split(",");
       
       for (String friend : friends)
-        _network.addFriend(terminal, friend);
-    } catch (OtherException e) {
+		_network.findTerminal(terminal).addFriend(friend);
+    } catch (UnknowKeyException e) {
       throw new UnrecognizedEntryException("Some message error in line:  " + line, e);
     }
   }

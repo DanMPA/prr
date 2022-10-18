@@ -9,7 +9,7 @@ import prr.core.client.Client;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable{
+abstract public class Terminal implements Serializable {
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _id;
@@ -44,11 +44,11 @@ abstract public class Terminal implements Serializable{
 	 *         it was the originator of this communication.
 	 **/
 
-	public void addCommunication(){
+	public void addCommunication() {
 		_numberCommunications += 1;
 	}
 
-	public int numberCommunications(){
+	public int numberCommunications() {
 		return _numberCommunications;
 	}
 
@@ -84,11 +84,11 @@ abstract public class Terminal implements Serializable{
 
 	}
 
-	public void addFriend(String frientTerminalKey){
+	public void addFriend(String frientTerminalKey) {
 		_terminalFrinds.add(frientTerminalKey);
 	}
 
-	public void removeFriend(String frientTerminalKey){
+	public void removeFriend(String frientTerminalKey) {
 		_terminalFrinds.remove(frientTerminalKey);
 	}
 
@@ -132,27 +132,22 @@ abstract public class Terminal implements Serializable{
 
 	@Override
 	public String toString() {
-		String tempString;
-		String paymentsString = String.format("%.2f", _payments);
-		String debtString = String.format("%.2f", _debt);
-		tempString = String.join("|", _id, _owner.get_key(), _mode.toString(), paymentsString, debtString);
-		tempString += "|";
-		tempString += String.join(",", _terminalFrinds);
-		return tempString;
+		return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
+				String.format("%.0f", _debt), String.join(",", _terminalFrinds));
 
 	}
 
 	// @Override
 	// public int compareTo(Object o){
-	// 	if(o instanceof Terminal){
-	// 		Terminal terminl2 = (Terminal)o;
-	// 		try{
-	// 			return Integer.valueOf(this._id) - Integer.valueOf(terminl2.get_id());
-	// 		} catch (NumberFormatException ex){
-	// 			return 0;
-	// 		}
-	// 	}
-	// 	return 0;
+	// if(o instanceof Terminal){
+	// Terminal terminl2 = (Terminal)o;
+	// try{
+	// return Integer.valueOf(this._id) - Integer.valueOf(terminl2.get_id());
+	// } catch (NumberFormatException ex){
+	// return 0;
+	// }
+	// }
+	// return 0;
 	// }
 
 }
