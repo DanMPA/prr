@@ -9,7 +9,7 @@ import prr.core.client.Client;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable {
+abstract public class Terminal implements Serializable{
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _id;
@@ -48,50 +48,88 @@ abstract public class Terminal implements Serializable {
 		_numberCommunications += 1;
 	}
 
+	/**
+	 * @return int
+	 */
 	public int numberCommunications() {
 		return _numberCommunications;
 	}
 
+	/**
+	 * @return boolean
+	 */
 	public boolean canEndCommunication() {
 		return true;
 	}
 
+	/**
+	 * @param to
+	 * @param message
+	 */
 	public void makeSMS(Terminal to, String message) {
 
 	}
 
+	/**
+	 * @param from
+	 */
 	public void acceptSMS(Terminal from) {
 
 	}
 
+	/**
+	 * @param to
+	 */
 	public void makeVoiceCall(Terminal to) {
 
 	}
 
+	/**
+	 * @param from
+	 */
 	public void acceptVoiceCall(Terminal from) {
 
 	}
 
+	/**
+	 * @param to
+	 */
 	public void makeVideoCall(Terminal to) {
 
 	}
 
+	/**
+	 * @param from
+	 */
 	public void acceptVideoCall(Terminal from) {
 
 	}
 
+	/**
+	 * @param size
+	 */
 	public void endOngoingCommunication(int size) {
 
 	}
 
+	/**
+	 * @param frientTerminalKey
+	 */
 	public void addFriend(String frientTerminalKey) {
 		_terminalFrinds.add(frientTerminalKey);
 	}
 
+	/**
+	 * @param frientTerminalKey
+	 */
 	public void removeFriend(String frientTerminalKey) {
 		_terminalFrinds.remove(frientTerminalKey);
 	}
 
+	/**
+	 * @param newMode
+	 * @return boolean
+	 */
 	public boolean changeTerminalMode(TerminalMode newMode) {
 		if (_mode.equals(newMode)) {
 			return false;
@@ -101,10 +139,16 @@ abstract public class Terminal implements Serializable {
 		}
 	}
 
+	/**
+	 * @return String
+	 */
 	public String get_id() {
 		return _id;
 	}
 
+	/**
+	 * @return int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -113,6 +157,10 @@ abstract public class Terminal implements Serializable {
 		return result;
 	}
 
+	/**
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -130,6 +178,9 @@ abstract public class Terminal implements Serializable {
 		return true;
 	}
 
+	/**
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
@@ -137,17 +188,21 @@ abstract public class Terminal implements Serializable {
 
 	}
 
+	/**
+	 * @param o
+	 * @return int
+	 */
 	// @Override
-	// public int compareTo(Object o){
-	// if(o instanceof Terminal){
-	// Terminal terminl2 = (Terminal)o;
-	// try{
-	// return Integer.valueOf(this._id) - Integer.valueOf(terminl2.get_id());
-	// } catch (NumberFormatException ex){
-	// return 0;
-	// }
-	// }
-	// return 0;
+	// public int compareTo(Object o) {
+	// 	if (o instanceof Terminal) {
+	// 		Terminal terminl2 = (Terminal) o;
+	// 		try {
+	// 			return Integer.valueOf(this._id) - Integer.valueOf(terminl2.get_id());
+	// 		} catch (NumberFormatException ex) {
+	// 			return 0;
+	// 		}
+	// 	}
+	// 	return 0;
 	// }
 
 }
