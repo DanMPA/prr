@@ -2,9 +2,9 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -150,6 +150,7 @@ public class Network implements Serializable {
 			switch (type) {
 				case "BASIC":
 					tempTerminal = new BasicTerminal(key, tempClient);
+					findClient(clientID).addTermina(tempTerminal);
 					if (_terminals.containsKey(key)) {
 						throw new DuplicateEntityKeyException(key);
 					}
@@ -157,6 +158,7 @@ public class Network implements Serializable {
 					return tempTerminal;
 				case "FANCY":
 					tempTerminal = new FancyTerminal(key, tempClient);
+					findClient(clientID).addTermina(tempTerminal);
 					if (_terminals.containsKey(key)) {
 						throw new DuplicateEntityKeyException(key);
 					}

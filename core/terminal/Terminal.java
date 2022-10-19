@@ -16,6 +16,10 @@ abstract public class Terminal implements Serializable {
 	private double _debt;
 	private double _payments;
 	private TerminalMode _mode;
+	public TerminalMode get_mode() {
+		return _mode;
+	}
+
 	private Collection<String> _terminalFrinds;
 	private Client _owner;
 	private int _numberCommunications;
@@ -33,7 +37,8 @@ abstract public class Terminal implements Serializable {
 	 * @return true if this terminal is neither off neither busy, false otherwise.
 	 **/
 	public boolean canStartCommunication() {
-		return true;
+		return  _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
+
 	}
 
 	/**
@@ -59,7 +64,7 @@ abstract public class Terminal implements Serializable {
 	 * @return boolean
 	 */
 	public boolean canEndCommunication() {
-		return true;
+		return !this.canStartCommunication();
 	}
 
 	/**

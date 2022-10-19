@@ -27,11 +27,12 @@ class DoSaveFile extends Command<NetworkManager> {
 				_display.popup(Message.fileNotFound(_receiver.get_fileName()));
 			}
 		} else {
+			
 			String file =Form.requestString(Message.newSaveAs());
 			try {
 				_receiver.saveAs(file);
 			} catch (MissingFileAssociationException | IOException ex) {
-				throw new FileOpenFailedException(ex);
+				_display.popup(Message.fileNotFound(_receiver.get_fileName()));	
 			}
 		}
 	}

@@ -64,6 +64,10 @@ public class Client implements Serializable {
 		return true;
 	}
 
+	public void addTermina(Terminal terminal){
+		_associatedTerminals.add(terminal);
+	}
+
 	public String get_key() {
 		return _key;
 	}

@@ -37,6 +37,8 @@ public class NetworkManager {
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
 			_network = (Network) in.readObject();
 			_fileName = fileName;
+		} catch (ClassNotFoundException | IOException ex){
+			throw new UnavailableFileException(fileName);
 		}
 	}
 
@@ -73,6 +75,7 @@ public class NetworkManager {
 	public void saveAs(String filename) throws MissingFileAssociationException, IOException {
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
 			out.writeObject(_network);
+			_fileName =filename;
 		}
 	}
 
@@ -85,7 +88,7 @@ public class NetworkManager {
 	public void importFile(String filename) throws ImportFileException {
 		try {
 			_network.importFile(filename);
-		} catch (IOException | UnrecognizedEntryException /* FIXME maybe other exceptions */ e) {
+		} catch (IOException | UnrecognizedEntryException e) {
 			throw new ImportFileException(filename, e);
 		}
 	}
