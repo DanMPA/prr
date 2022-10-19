@@ -2,7 +2,7 @@ package prr.app.client;
 
 import prr.core.Network;
 import prr.core.client.Client;
-import prr.core.exception.UnknowKeyException;
+import prr.core.exception.UnknownKeyException;
 import prr.app.exception.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
@@ -24,7 +24,7 @@ class DoShowClientPaymentsAndDebts extends Command<Network> {
 		try {
 			Client tempClient = _receiver.findClient(CLIENT_ID);
 			Message.clientPaymentsAndDebts(CLIENT_ID, (long) tempClient.get_payments(), (long) tempClient.get_debts());
-		} catch (UnknowKeyException ex) {
+		} catch (UnknownKeyException ex) {
 			throw new UnknownClientKeyException(stringField(CLIENT_ID));
 		}
 	}

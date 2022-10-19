@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import prr.core.exception.DuplicateEntityKeyException;
 import prr.core.exception.KeyFormattingExeption;
-import prr.core.exception.UnknowKeyException;
+import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 // import more exception core classes if needed
 import prr.core.terminal.Terminal;
@@ -85,7 +85,7 @@ public class Parser {
            throw new UnrecognizedEntryException("Invalid specification in line: " + line);
         } 
       }
-    } catch (UnknowKeyException| DuplicateEntityKeyException | KeyFormattingExeption e) {
+    } catch (UnknownKeyException| DuplicateEntityKeyException | KeyFormattingExeption e) {
       throw new UnrecognizedEntryException("Invalid specification: " + line, e);
     }
   }
@@ -100,7 +100,7 @@ public class Parser {
       
       for (String friend : friends)
 		_network.findTerminal(terminal).addFriend(friend);
-    } catch (UnknowKeyException e) {
+    } catch (UnknownKeyException e) {
       throw new UnrecognizedEntryException("Some message error in line:  " + line, e);
     }
   }

@@ -1,7 +1,7 @@
 package prr.app.client;
 
 import prr.core.Network;
-import prr.core.exception.UnknowKeyException;
+import prr.core.exception.UnknownKeyException;
 
 import java.util.Collection;
 
@@ -31,7 +31,7 @@ class DoShowClient extends Command<Network> {
       _display.addAll(clientNotifications);
       _display.display();
       
-    } catch(UnknowKeyException ex){
+    } catch(UnknownKeyException ex){
      throw new UnknownClientKeyException(stringField(CLIENT_ID)); 
     }
   }

@@ -2,7 +2,7 @@ package prr.app.terminal;
 
 import prr.app.exception.UnknownTerminalKeyException;
 import prr.core.Network;
-import prr.core.exception.UnknowKeyException;
+import prr.core.exception.UnknownKeyException;
 import prr.core.terminal.Terminal;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -22,7 +22,7 @@ class DoRemoveFriend extends TerminalCommand {
 	try{
 		_network.findTerminal(friendsTerminalId);
 		_receiver.removeFriend(friendsTerminalId);
-	} catch(UnknowKeyException ex){
+	} catch(UnknownKeyException ex){
 		throw new UnknownTerminalKeyException(friendsTerminalId);
 	}
   }

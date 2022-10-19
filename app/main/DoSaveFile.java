@@ -1,8 +1,8 @@
 package prr.app.main;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import prr.app.exception.FileOpenFailedException;
 import prr.core.NetworkManager;
 import prr.core.exception.MissingFileAssociationException;
 import pt.tecnico.uilib.forms.Form;
@@ -19,7 +19,7 @@ class DoSaveFile extends Command<NetworkManager> {
 	}
 
 	@Override
-	protected final void execute() {
+	protected final void execute() throws FileOpenFailedException {
 		if (_receiver.hasFileName()) {
 			try {
 				_receiver.save();
@@ -27,11 +27,11 @@ class DoSaveFile extends Command<NetworkManager> {
 				_display.popup(Message.fileNotFound(_receiver.get_fileName()));
 			}
 		} else {
-			String file =Form.requestString(Message.saveAs());
+			String file =Form.requestString(Message.newSaveAs());
 			try {
 				_receiver.saveAs(file);
 			} catch (MissingFileAssociationException | IOException ex) {
-				_display.popup(Message.fileNotFound(file));
+				throw new FileOpenFailedException(ex);
 			}
 		}
 	}

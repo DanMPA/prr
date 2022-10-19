@@ -1,7 +1,7 @@
 package prr.app.terminals;
 
 import prr.core.Network;
-import prr.core.exception.UnknowKeyException;
+import prr.core.exception.UnknownKeyException;
 import prr.core.terminal.Terminal;
 
 import prr.app.exception.UnknownTerminalKeyException;
@@ -26,7 +26,7 @@ class DoOpenMenuTerminalConsole extends Command<Network> {
 			Terminal terminal = _receiver.findTerminal(stringField("terminalKey"));
 			Menu subMenu =  new Menu(_receiver, terminal);
 			subMenu.open();
-		} catch (UnknowKeyException ex) {
+		} catch (UnknownKeyException ex) {
 			throw new UnknownTerminalKeyException(stringField("terminalKey"));
 		}
 	}
