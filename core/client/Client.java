@@ -91,9 +91,7 @@ public class Client implements Serializable {
 	public Collection<String> getNotifcations() {
 		List<String> tempNotifications = new ArrayList<>();
 		if (_receiveNotification) {
-			for (Notification notification : _terminalNotifications) {
-				tempNotifications.add(notification.toString());
-			}
+			return _terminalNotifications.stream().map(e -> e.toString()).toList();
 		}
 		return tempNotifications;
 	}

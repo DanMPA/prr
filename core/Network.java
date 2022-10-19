@@ -2,13 +2,9 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.regex.Pattern;
 
 import prr.core.client.Client;
@@ -79,11 +75,7 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 */
 	public Collection<String> showAllClients() {
-		var allClients = new ArrayList<String>();
-		for (Client c : _clients.values()) {
-			allClients.add(c.toString());
-		}
-		return allClients;
+		return _clients.values().stream().map(e -> e.toString()).toList();
 	}
 
 	/**
@@ -143,30 +135,24 @@ public class Network implements Serializable {
 	 */
 	public Terminal registerTerminal(String key, String clientID, String type) throws UnknownKeyException,
 			DuplicateEntityKeyException, KeyFormattingExeption {
-
 		if (validTerminalID(key)) {
-			Client tempClient = findClient(clientID);
 			Terminal tempTerminal;
 			switch (type) {
 				case "BASIC":
-					tempTerminal = new BasicTerminal(key, tempClient);
-					findClient(clientID).addTermina(tempTerminal);
-					if (_terminals.containsKey(key)) {
-						throw new DuplicateEntityKeyException(key);
-					}
-					_terminals.put(key, tempTerminal);
-					return tempTerminal;
+					tempTerminal = new BasicTerminal(key, findClient(clientID));
+					break;
 				case "FANCY":
-					tempTerminal = new FancyTerminal(key, tempClient);
-					findClient(clientID).addTermina(tempTerminal);
-					if (_terminals.containsKey(key)) {
-						throw new DuplicateEntityKeyException(key);
-					}
-					_terminals.put(key, tempTerminal);
-					return tempTerminal;
+					tempTerminal = new FancyTerminal(key, findClient(clientID));
+					break;
 				default:
 					return null;
 			}
+			findClient(clientID).addTermina(tempTerminal);
+			if (_terminals.containsKey(key)) {
+				throw new DuplicateEntityKeyException(key);
+			}
+			_terminals.put(key, tempTerminal);
+			return tempTerminal;
 		} else {
 			throw new KeyFormattingExeption(key);
 		}
@@ -177,24 +163,24 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 */
 	public Collection<String> showAllTerminals() {
-		List<String> allTerminals = new ArrayList<>();
-		for (Terminal terminal : _terminals.values()) {
-			allTerminals.add(terminal.toString());
-		}
-		return allTerminals;
+		return _terminals.values().stream()
+								  .map(e -> e.toString())
+								  .toList();
+		// List<String> allTerminals = new ArrayList<>();
+		// for (Terminal terminal : _terminals.values()) {
+		// allTerminals.add(terminal.toString());
+		// }
+		// return allTerminals;
 	}
 
 	/**
 	 * @return Collection<String>
 	 */
 	public Collection<String> showTerminalsWithoutCommunications() {
-		List<String> terminalsWithoutCommunications = new Vector<>();
-		for (Terminal terminal : _terminals.values()) {
-			if (terminal.numberCommunications() == 0) {
-				terminalsWithoutCommunications.add(terminal.toString());
-			}
-		}
-		return terminalsWithoutCommunications;
+		return _terminals.values().stream()
+								  .filter(e -> e.numberCommunications() == 0)
+								  .map(e -> e.toString())
+								  .toList();
 	}
 
 	/**
@@ -205,7 +191,7 @@ public class Network implements Serializable {
 	 * @throws IOException                if there is an IO erro while processing
 	 *                                    the text file
 	 */
-	void importFile(String filename) throws UnrecognizedEntryException, IOException /* FIXME maybe other exceptions */ {
+	void importFile(String filename) throws UnrecognizedEntryException, IOException {
 		new Parser(this).parseFile(filename);
 	}
 }

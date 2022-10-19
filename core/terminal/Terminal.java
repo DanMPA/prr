@@ -16,9 +16,6 @@ abstract public class Terminal implements Serializable {
 	private double _debt;
 	private double _payments;
 	private TerminalMode _mode;
-	public TerminalMode get_mode() {
-		return _mode;
-	}
 
 	private Collection<String> _terminalFrinds;
 	private Client _owner;
@@ -37,8 +34,7 @@ abstract public class Terminal implements Serializable {
 	 * @return true if this terminal is neither off neither busy, false otherwise.
 	 **/
 	public boolean canStartCommunication() {
-		return  _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
-
+		return _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
 	}
 
 	/**
@@ -48,7 +44,6 @@ abstract public class Terminal implements Serializable {
 	 *         communication) and
 	 *         it was the originator of this communication.
 	 **/
-
 	public void addCommunication() {
 		_numberCommunications += 1;
 	}
@@ -183,19 +178,22 @@ abstract public class Terminal implements Serializable {
 		return true;
 	}
 
+	public TerminalMode get_mode() {
+		return _mode;
+	}
+
 	/**
 	 * @return String
 	 */
 	@Override
 	public String toString() {
-		if(_terminalFrinds.size() != 0){
+		if (_terminalFrinds.size() != 0) {
 			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
 					String.format("%.0f", _debt), String.join(",", _terminalFrinds));
-		} else{
+		} else {
 			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
-			String.format("%.0f", _debt));
+					String.format("%.0f", _debt));
 		}
 
 	}
-
 }
