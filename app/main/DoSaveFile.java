@@ -16,9 +16,6 @@ class DoSaveFile extends Command<NetworkManager> {
 
 	DoSaveFile(NetworkManager receiver) {
 		super(Label.SAVE_FILE, receiver);
-		if(!_receiver.hasFileName()){
-			addStringField("file", Message.newSaveAs());
-		}
 	}
 
 	@Override
@@ -30,10 +27,11 @@ class DoSaveFile extends Command<NetworkManager> {
 				_display.popup(Message.fileNotFound(_receiver.get_fileName()));
 			}
 		} else {
+			String file =Form.requestString(Message.saveAs());
 			try {
-				_receiver.saveAs(stringField("file"));
+				_receiver.saveAs(file);
 			} catch (MissingFileAssociationException | IOException ex) {
-				_display.popup(Message.fileNotFound(stringField("file")));
+				_display.popup(Message.fileNotFound(file));
 			}
 		}
 	}

@@ -2,12 +2,15 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 
 import prr.core.client.Client;
 import prr.core.client.ClientLevel;
@@ -27,50 +30,44 @@ public class Network implements Serializable {
 	/** Serial number for serialization. */
 	private static final long serialVersionUID = 202208091753L;
 
-	private Collection<Client> _clients;
+	private Map<String, Client> _clients;
 	private Collection<Terminal> _terminals;
 	private Collection<Communication> _communication;
 
-
 	public Network() {
-		this._clients = new HashSet<Client>();
+		this._clients = new TreeMap<String, Client>();
 		this._terminals = new HashSet<Terminal>();
-
 	}
 
-	
-	/** 
+	/**
+	 * 
 	 * @param key
 	 * @param name
 	 * @param taxNumber
 	 * @return boolean
 	 * @throws DuplicateEntityKeyException
 	 */
-	public boolean registerClient(String key, String name, int taxNumber) throws DuplicateEntityKeyException {
-		Client tempClient = new Client(key, name, taxNumber, ClientLevel.NORMAL, true);
-		if (!_clients.add(tempClient)) {
+	public void registerClient(String key, String name, int taxNumber) throws DuplicateEntityKeyException {
+		if (!_clients.containsKey(key)) {
+			_clients.put(key,new Client(key, name, taxNumber, ClientLevel.NORMAL, true));
+		} else{
 			throw new DuplicateEntityKeyException(key);
 		}
-		return true;
 	}
 
-	
-	/** 
+	/**
 	 * @param key
 	 * @return Client
 	 * @throws UnknowKeyException
 	 */
 	public Client findClient(String key) throws UnknowKeyException {
-		for (Client client : _clients) {
-			if (client.get_key().equals(key)) {
-				return client;
-			}
+		if (_clients.containsKey(key)) {
+			return _clients.get(key);
 		}
 		throw new UnknowKeyException(key);
 	}
 
-	
-	/** 
+	/**
 	 * @param key
 	 * @return String
 	 * @throws UnknowKeyException
@@ -79,31 +76,27 @@ public class Network implements Serializable {
 		return findClient(key).toString();
 	}
 
-	
-	/** 
+	/**
 	 * @return Collection<String>
 	 */
 	public Collection<String> showAllClients() {
-		List<String> allClients = new Vector<>();
-		for (Client client : _clients) {
-			allClients.add(client.toString());
+		var allClients = new ArrayList<String>();
+		for(Client c : _clients.values()){
+			allClients.add(c.toString());
 		}
 		return allClients;
 	}
 
-	
-	/** 
+	/**
 	 * @param key
 	 * @return Collection<String>
 	 * @throws UnknowKeyException
 	 */
 	public Collection<String> showNotificaions(String key) throws UnknowKeyException {
-		Client tempClient = findClient(key);
-		return tempClient.getNotifcations();
+		return findClient(key).getNotifcations();
 	}
 
-	
-	/** 
+	/**
 	 * @param key
 	 * @param status
 	 * @return boolean
@@ -119,8 +112,7 @@ public class Network implements Serializable {
 		}
 	}
 
-	
-	/** 
+	/**
 	 * @param key
 	 * @return Terminal
 	 * @throws UnknowKeyException
@@ -134,8 +126,7 @@ public class Network implements Serializable {
 		throw new UnknowKeyException(key);
 	}
 
-	
-	/** 
+	/**
 	 * @param id
 	 * @return boolean
 	 * @throws UnknowKeyException
@@ -144,11 +135,10 @@ public class Network implements Serializable {
 		return Pattern.matches("[0-9]{6}", id);
 	}
 
-	
-	/** 
-	 * @param key
-	 * @param clientID
-	 * @param type
+	/**
+	 * @param key      Terminal Id
+	 * @param clientID Terminal ownerd Id
+	 * @param type     Terminal type
 	 * @return Terminal
 	 * @throws UnknowKeyException
 	 * @throws DuplicateEntityKeyException
@@ -156,6 +146,7 @@ public class Network implements Serializable {
 	 */
 	public Terminal registerTerminal(String key, String clientID, String type) throws UnknowKeyException,
 			DuplicateEntityKeyException, KeyFormattingExeption {
+
 		if (validTerminalID(key)) {
 			Client tempClient = findClient(clientID);
 			Terminal tempTerminal;
@@ -181,8 +172,7 @@ public class Network implements Serializable {
 
 	}
 
-	
-	/** 
+	/**
 	 * @return Collection<String>
 	 */
 	public Collection<String> showAllTerminals() {
@@ -193,8 +183,7 @@ public class Network implements Serializable {
 		return allTerminals;
 	}
 
-	
-	/** 
+	/**
 	 * @return Collection<String>
 	 */
 	public Collection<String> showTerminalsWithoutCommunications() {
@@ -216,6 +205,6 @@ public class Network implements Serializable {
 	 *                                    the text file
 	 */
 	void importFile(String filename) throws UnrecognizedEntryException, IOException /* FIXME maybe other exceptions */ {
-		// FIXME implement method
+		new Parser(this).parseFile(filename);
 	}
 }

@@ -9,7 +9,7 @@ import prr.core.client.Client;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable{
+abstract public class Terminal implements Serializable {
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _id;
@@ -23,7 +23,7 @@ abstract public class Terminal implements Serializable{
 	public Terminal(String _id, Client _owner) {
 		this._id = _id;
 		this._owner = _owner;
-		this._mode = TerminalMode.ON;
+		this._mode = TerminalMode.IDLE;
 		this._terminalFrinds = new TreeSet<String>();
 	}
 
@@ -183,26 +183,14 @@ abstract public class Terminal implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
-				String.format("%.0f", _debt), String.join(",", _terminalFrinds));
+		if(_terminalFrinds.size() != 0){
+			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
+					String.format("%.0f", _debt), String.join(",", _terminalFrinds));
+		} else{
+			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
+			String.format("%.0f", _debt));
+		}
 
 	}
-
-	/**
-	 * @param o
-	 * @return int
-	 */
-	// @Override
-	// public int compareTo(Object o) {
-	// 	if (o instanceof Terminal) {
-	// 		Terminal terminl2 = (Terminal) o;
-	// 		try {
-	// 			return Integer.valueOf(this._id) - Integer.valueOf(terminl2.get_id());
-	// 		} catch (NumberFormatException ex) {
-	// 			return 0;
-	// 		}
-	// 	}
-	// 	return 0;
-	// }
 
 }

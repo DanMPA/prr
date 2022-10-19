@@ -23,7 +23,6 @@ public class BasicTerminal extends Terminal {
 	 */
 	@Override
 	public String toString() {
-		String temp = super.toString();
-		return String.join("|", "BASIC", temp);
+		return String.join("|", "BASIC", super.toString());
 	}
 }
