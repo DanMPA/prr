@@ -147,13 +147,14 @@ public class Network implements Serializable {
 	}
 
 	/**
+	 * Registers a terminal based on their type
 	 * @param key      Terminal Id
 	 * @param clientID Terminal owner Id
 	 * @param type     Terminal type
 	 * @return Terminal
-	 * @throws UnknownKeyException
-	 * @throws DuplicateEntityKeyException
-	 * @throws KeyFormattingExemption
+	 * @throws UnknownKeyException if the key is not valid
+	 * @throws DuplicateEntityKeyException if the key already exists 
+	 * @throws KeyFormattingExemption if the key is not valid
 	 */
 	public Terminal registerTerminal(String key, String clientID, String type) throws UnknownKeyException,
 			DuplicateEntityKeyException, KeyFormattingExemption {
