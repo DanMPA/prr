@@ -199,8 +199,8 @@ abstract public class Terminal implements Serializable {
 	/**
 	 * Converts Terminal Object to a String representation
 	 * @return String in the format
-	 * 			terminalType|terminalId|clientId|terminalStatus|balance-paid|balance-debts|friend1,...,friend
-	 *			terminalType|terminalId|clientId|terminalStatus|balance-paid|balance-debts
+	 * 			terminalId|clientId|terminalStatus|balance-paid|balance-debts|friend1,...,friend
+	 *			terminalId|clientId|terminalStatus|balance-paid|balance-debts
 	 */
 	@Override
 	public String toString() {

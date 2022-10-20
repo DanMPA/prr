@@ -19,7 +19,10 @@ public class BasicTerminal extends Terminal {
 	}
 
 	/**
-	 * @return String
+	 * Converts Terminal Object to a String representation
+	 * @return String in the format
+	 * 			terminalType|terminalId|clientId|terminalStatus|balance-paid|balance-debts|friend1,...,friend
+	 *			terminalType|terminalId|clientId|terminalStatus|balance-paid|balance-debts
 	 */
 	@Override
 	public String toString() {
