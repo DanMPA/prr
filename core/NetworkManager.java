@@ -21,6 +21,11 @@ public class NetworkManager {
 	private Network _network = new Network();
 	private String _fileName = "";
 
+	
+	/**
+	 * Gets the network
+	 * @return Network
+	 */
 	public Network getNetwork() {
 		return _network;
 	}
@@ -37,7 +42,7 @@ public class NetworkManager {
 		try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
 			_network = (Network) in.readObject();
 			_fileName = fileName;
-		} catch (ClassNotFoundException | IOException ex){
+		} catch (ClassNotFoundException | IOException ex) {
 			throw new UnavailableFileException(fileName);
 		}
 	}
@@ -75,7 +80,7 @@ public class NetworkManager {
 	public void saveAs(String filename) throws MissingFileAssociationException, IOException {
 		try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
 			out.writeObject(_network);
-			_fileName =filename;
+			_fileName = filename;
 		}
 	}
 
@@ -93,10 +98,18 @@ public class NetworkManager {
 		}
 	}
 
-	public boolean hasFileName(){
+	
+	/** 
+	 * @return boolean
+	 */
+	public boolean hasFileName() {
 		return !_fileName.isEmpty();
 	}
+
 	
+	/** 
+	 * @return String
+	 */
 	public String get_fileName() {
 		return _fileName;
 	}
