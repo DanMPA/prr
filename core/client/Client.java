@@ -20,6 +20,14 @@ public class Client implements Serializable {
 	private double _payments;
 	private double _debts;
 
+	/***
+	 * Constrictor of a client object.
+	 * @param _key 
+	 * @param _name
+	 * @param _taxNumber
+	 * @param _level
+	 * @param _receiveNotification
+	 */
 	public Client(String _key, String _name, int _taxNumber, ClientLevel _level, boolean _receiveNotification) {
 		this._key = _key;
 		this._name = _name;
