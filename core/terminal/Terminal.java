@@ -17,7 +17,7 @@ abstract public class Terminal implements Serializable {
 	private double _payments;
 	private TerminalMode _mode;
 
-	private Collection<String> _terminalFrinds;
+	private Collection<String> _terminalFriends;
 	private Client _owner;
 	private int _numberCommunications;
 
@@ -25,7 +25,7 @@ abstract public class Terminal implements Serializable {
 		this._id = _id;
 		this._owner = _owner;
 		this._mode = TerminalMode.IDLE;
-		this._terminalFrinds = new TreeSet<String>();
+		this._terminalFriends = new TreeSet<String>();
 	}
 
 	/**
@@ -49,6 +49,7 @@ abstract public class Terminal implements Serializable {
 	}
 
 	/**
+	 * Gets number of Communications.
 	 * @return int
 	 */
 	public int numberCommunications() {
@@ -56,6 +57,7 @@ abstract public class Terminal implements Serializable {
 	}
 
 	/**
+	 * Checks if this terminal can end a communication.
 	 * @return boolean
 	 */
 	public boolean canEndCommunication() {
@@ -113,22 +115,25 @@ abstract public class Terminal implements Serializable {
 	}
 
 	/**
+	 * Adds a friend to a terminal.
 	 * @param frientTerminalKey
 	 */
 	public void addFriend(String frientTerminalKey) {
-		_terminalFrinds.add(frientTerminalKey);
+		_terminalFriends.add(frientTerminalKey);
 	}
 
 	/**
+	 * Removes a friend from a terminal.
 	 * @param frientTerminalKey
 	 */
 	public void removeFriend(String frientTerminalKey) {
-		_terminalFrinds.remove(frientTerminalKey);
+		_terminalFriends.remove(frientTerminalKey);
 	}
 
 	/**
+	 * Changes terminal's mode
 	 * @param newMode
-	 * @return boolean
+	 * @return boolean true when the newMode is different than the actual mode
 	 */
 	public boolean changeTerminalMode(TerminalMode newMode) {
 		if (_mode.equals(newMode)) {
@@ -140,6 +145,7 @@ abstract public class Terminal implements Serializable {
 	}
 
 	/**
+	 * Gets terminal ID.
 	 * @return String
 	 */
 	public String get_id() {
@@ -147,6 +153,7 @@ abstract public class Terminal implements Serializable {
 	}
 
 	/**
+	 * Compute hashCode with reference to terminal's ID
 	 * @return int
 	 */
 	@Override
@@ -158,6 +165,9 @@ abstract public class Terminal implements Serializable {
 	}
 
 	/**
+	 * Verifies if two terminal objects are the same
+	 * If their IDs are the same
+	 * 
 	 * @param obj
 	 * @return boolean
 	 */
@@ -178,18 +188,25 @@ abstract public class Terminal implements Serializable {
 		return true;
 	}
 
+	/**
+	 * Gets Terminal's mode
+	 * @return TerminalMode
+	 */
 	public TerminalMode get_mode() {
 		return _mode;
 	}
 
 	/**
-	 * @return String
+	 * Converts Terminal Object to a String representation
+	 * @return String in the format
+	 * 			terminalType|terminalId|clientId|terminalStatus|balance-paid|balance-debts|friend1,...,friend
+	 *			terminalType|terminalId|clientId|terminalStatus|balance-paid|balance-debts
 	 */
 	@Override
 	public String toString() {
-		if (_terminalFrinds.size() != 0) {
+		if (_terminalFriends.size() != 0) {
 			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
-					String.format("%.0f", _debt), String.join(",", _terminalFrinds));
+					String.format("%.0f", _debt), String.join(",", _terminalFriends));
 		} else {
 			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
 					String.format("%.0f", _debt));
