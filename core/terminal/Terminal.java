@@ -116,18 +116,18 @@ abstract public class Terminal implements Serializable {
 
 	/**
 	 * Adds a friend to a terminal.
-	 * @param frientTerminalKey
+	 * @param friendTerminalKey
 	 */
-	public void addFriend(String frientTerminalKey) {
-		_terminalFriends.add(frientTerminalKey);
+	public void addFriend(String friendTerminalKey) {
+		_terminalFriends.add(friendTerminalKey);
 	}
 
 	/**
 	 * Removes a friend from a terminal.
-	 * @param frientTerminalKey
+	 * @param friendTerminalKey
 	 */
-	public void removeFriend(String frientTerminalKey) {
-		_terminalFriends.remove(frientTerminalKey);
+	public void removeFriend(String friendTerminalKey) {
+		_terminalFriends.remove(friendTerminalKey);
 	}
 
 	/**

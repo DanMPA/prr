@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import prr.core.exception.DuplicateEntityKeyException;
-import prr.core.exception.KeyFormattingExeption;
+import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 // import more exception core classes if needed
@@ -81,7 +81,7 @@ public class Parser {
            throw new UnrecognizedEntryException("Invalid specification in line: " + line);
         } 
       }
-    } catch (UnknownKeyException| DuplicateEntityKeyException | KeyFormattingExeption e) {
+    } catch (UnknownKeyException| DuplicateEntityKeyException | KeyFormattingExemption e) {
       throw new UnrecognizedEntryException("Invalid specification: " + line, e);
     }
   }

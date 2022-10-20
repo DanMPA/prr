@@ -6,7 +6,7 @@ import prr.app.exception.UnknownClientKeyException;
 
 import prr.core.Network;
 import prr.core.exception.DuplicateEntityKeyException;
-import prr.core.exception.KeyFormattingExeption;
+import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnknownKeyException;
 import prr.core.terminal.TerminalType;
 
@@ -37,7 +37,7 @@ class DoRegisterTerminal extends Command<Network> {
 			_receiver.registerTerminal(terminalKey, clientID, termianlType);
 		} catch (UnknownKeyException ex) {
 			throw new UnknownClientKeyException(clientID);
-		} catch (KeyFormattingExeption ex) {
+		} catch (KeyFormattingExemption ex) {
 			throw new InvalidTerminalKeyException(terminalKey);
 		} catch (DuplicateEntityKeyException ex) {
 			throw new DuplicateTerminalKeyException(terminalKey);

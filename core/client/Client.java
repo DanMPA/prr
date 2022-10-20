@@ -30,9 +30,11 @@ public class Client implements Serializable {
 		this._terminalNotifications = new ArrayList<>();
 	}
 
-	
-	/** 
-	 * @return String
+	/**
+	 * Converts Client Object to a String representation.
+	 * 
+	 * @return String in the format
+	 *         CLIENT|key|name|taxId|type|notifications|terminals|payments|debts
 	 */
 	@Override
 	public String toString() {
@@ -41,8 +43,9 @@ public class Client implements Serializable {
 				String.format("%.0f", _payments), String.format("%.0f", _debts));
 	}
 
-	
-	/** 
+	/**
+	 * Computes hasCode with respect to clients id.
+	 * 
 	 * @return int
 	 */
 	@Override
@@ -53,10 +56,12 @@ public class Client implements Serializable {
 		return result;
 	}
 
-	
-	/** 
+	/**
+	 * Verifies if two Client objects are the same.
+	 * If there id are the same.
+	 * 
 	 * @param obj
-	 * @return boolean
+	 * @return boolean true if the key of the clients is the same.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -76,59 +81,66 @@ public class Client implements Serializable {
 		return true;
 	}
 
-	
-	/** 
+	/**
+	 * Adds a terminal to a Client.
+	 * 
 	 * @param terminal
 	 */
-	public void addTermina(Terminal terminal){
+	public void addTerminal(Terminal terminal) {
 		_associatedTerminals.add(terminal);
 	}
 
-	
-	/** 
+	/**
+	 * Gets the Clients ID.
+	 * 
 	 * @return String
 	 */
 	public String get_key() {
 		return _key;
 	}
 
-	
-	/** 
-	 * @return boolean
+	/**
+	 * Is the current client receiving notification.
+	 * 
+	 * @return boolean true when client is receiving notification.
 	 */
 	public boolean is_receiveNotification() {
 		return _receiveNotification;
 	}
 
-	
-	/** 
+	/**
+	 * Changes the state of Notifications.
+	 * 
 	 * @param _receiveNotification
 	 */
 	public void set_receiveNotification(boolean _receiveNotification) {
 		this._receiveNotification = _receiveNotification;
 	}
 
-	
-	/** 
+	/**
+	 * Gets Payment.
+	 * 
 	 * @return double
 	 */
 	public double get_payments() {
 		return _payments;
 	}
 
-	
-	/** 
+	/**
+	 * Get debts.
+	 * 
 	 * @return double
 	 */
 	public double get_debts() {
 		return _debts;
 	}
 
-	
-	/** 
-	 * @return Collection<String>
+	/**
+	 * Returns all the Notification associated to this client.
+	 * 
+	 * @return Collection<String> Collection of Notification in string format.
 	 */
-	public Collection<String> getNotifcations() {
+	public Collection<String> getNotifications() {
 		return _receiveNotification ? _terminalNotifications.stream().map(e -> e.toString()).toList() : null;
 	}
 }

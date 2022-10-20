@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import prr.core.client.Client;
 import prr.core.client.ClientLevel;
 import prr.core.exception.DuplicateEntityKeyException;
-import prr.core.exception.KeyFormattingExeption;
+import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 import prr.core.terminal.BasicTerminal;
@@ -79,12 +79,13 @@ public class Network implements Serializable {
 	}
 
 	/**
+	 * 
 	 * @param key
 	 * @return Collection<String>
 	 * @throws UnknownKeyException
 	 */
-	public Collection<String> showNotificaions(String key) throws UnknownKeyException {
-		return findClient(key).getNotifcations();
+	public Collection<String> showNotifications(String key) throws UnknownKeyException {
+		return findClient(key).getNotifications();
 	}
 
 	/**
@@ -131,10 +132,10 @@ public class Network implements Serializable {
 	 * @return Terminal
 	 * @throws UnknownKeyException
 	 * @throws DuplicateEntityKeyException
-	 * @throws KeyFormattingExeption
+	 * @throws KeyFormattingExemption
 	 */
 	public Terminal registerTerminal(String key, String clientID, String type) throws UnknownKeyException,
-			DuplicateEntityKeyException, KeyFormattingExeption {
+			DuplicateEntityKeyException, KeyFormattingExemption {
 		if (validTerminalID(key)) {
 			Terminal tempTerminal;
 			switch (type) {
@@ -147,14 +148,14 @@ public class Network implements Serializable {
 				default:
 					return null;
 			}
-			findClient(clientID).addTermina(tempTerminal);
+			findClient(clientID).addTerminal(tempTerminal);
 			if (_terminals.containsKey(key)) {
 				throw new DuplicateEntityKeyException(key);
 			}
 			_terminals.put(key, tempTerminal);
 			return tempTerminal;
 		} else {
-			throw new KeyFormattingExeption(key);
+			throw new KeyFormattingExemption(key);
 		}
 
 	}

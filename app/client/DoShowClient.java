@@ -26,7 +26,7 @@ class DoShowClient extends Command<Network> {
     try{
       String clientId = stringField(CLIENT_ID);
       String client = _receiver.showClient(clientId);
-      Collection<String> clientNotifications= _receiver.showNotificaions(clientId);
+      Collection<String> clientNotifications= _receiver.showNotifications(clientId);
       _display.add(client);
       _display.addAll(clientNotifications);
       _display.display();
