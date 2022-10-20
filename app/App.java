@@ -9,6 +9,10 @@ import pt.tecnico.uilib.Dialog;
  */
 public class App {
 
+  
+  /** 
+   * @param args
+   */
   public static void main(String[] args) {
     try (var ui = Dialog.UI) {
       var receiver = new NetworkManager();

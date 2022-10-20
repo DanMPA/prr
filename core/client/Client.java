@@ -3,7 +3,6 @@ package prr.core.client;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
@@ -31,6 +30,10 @@ public class Client implements Serializable {
 		this._terminalNotifications = new ArrayList<>();
 	}
 
+	
+	/** 
+	 * @return String
+	 */
 	@Override
 	public String toString() {
 		return String.join("|", "CLIENT", _key, _name, String.valueOf(_taxNumber), _level.toString(),
@@ -38,6 +41,10 @@ public class Client implements Serializable {
 				String.format("%.0f", _payments), String.format("%.0f", _debts));
 	}
 
+	
+	/** 
+	 * @return int
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -46,6 +53,11 @@ public class Client implements Serializable {
 		return result;
 	}
 
+	
+	/** 
+	 * @param obj
+	 * @return boolean
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -64,35 +76,59 @@ public class Client implements Serializable {
 		return true;
 	}
 
+	
+	/** 
+	 * @param terminal
+	 */
 	public void addTermina(Terminal terminal){
 		_associatedTerminals.add(terminal);
 	}
 
+	
+	/** 
+	 * @return String
+	 */
 	public String get_key() {
 		return _key;
 	}
 
+	
+	/** 
+	 * @return boolean
+	 */
 	public boolean is_receiveNotification() {
 		return _receiveNotification;
 	}
 
+	
+	/** 
+	 * @param _receiveNotification
+	 */
 	public void set_receiveNotification(boolean _receiveNotification) {
 		this._receiveNotification = _receiveNotification;
 	}
 
+	
+	/** 
+	 * @return double
+	 */
 	public double get_payments() {
 		return _payments;
 	}
 
+	
+	/** 
+	 * @return double
+	 */
 	public double get_debts() {
 		return _debts;
 	}
 
+	
+	/** 
+	 * @return Collection<String>
+	 */
 	public Collection<String> getNotifcations() {
-		List<String> tempNotifications = new ArrayList<>();
-		if (_receiveNotification) {
-			return _terminalNotifications.stream().map(e -> e.toString()).toList();
-		}
-		return tempNotifications;
+		return _receiveNotification ? _terminalNotifications.stream().map(e -> e.toString()).toList() : null;
 	}
 }
