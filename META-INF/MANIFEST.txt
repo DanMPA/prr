@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: prr.app.App
+Class-Path: po-uilib.jar
+
