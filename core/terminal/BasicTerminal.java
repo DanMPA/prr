@@ -14,7 +14,7 @@ public class BasicTerminal extends Terminal {
 	/**
 	 * @return boolean
 	 */
-	boolean accepVideoCall() {
+	boolean acceptVideoCall() {
 		return false;
 	}
 
