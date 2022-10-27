@@ -23,7 +23,7 @@ class DoSaveFile extends Command<NetworkManager> {
 			try {
 				_receiver.save();
 			} catch (MissingFileAssociationException | IOException ex) {
-				_display.popup(Message.fileNotFound(_receiver.get_fileName()));
+				_display.popup(Message.fileNotFound(_receiver.getFileName()));
 			}
 		} else {
 
@@ -31,7 +31,7 @@ class DoSaveFile extends Command<NetworkManager> {
 			try {
 				_receiver.saveAs(file);
 			} catch (MissingFileAssociationException | IOException ex) {
-				_display.popup(Message.fileNotFound(_receiver.get_fileName()));	
+				_display.popup(Message.fileNotFound(_receiver.getFileName()));	
 			}
 		}
 	}

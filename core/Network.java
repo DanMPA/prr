@@ -30,8 +30,8 @@ public class Network implements Serializable {
 	private Collection<Communication> _communication;
 
 	public Network() {
-		this._clients = new TreeMap<String, Client>();
-		this._terminals = new TreeMap<String, Terminal>();
+		this._clients = new TreeMap<>();
+		this._terminals = new TreeMap<>();
 	}
 
 	/**
@@ -42,10 +42,12 @@ public class Network implements Serializable {
 	 * @param taxNumber Client taxNumber
 	 * @throws DuplicateEntityKeyException if the client exist in the network
 	 */
-	public void registerClient(String key, String name, int taxNumber) throws DuplicateEntityKeyException {
+	public void registerClient(String key, String name, int taxNumber)
+			throws DuplicateEntityKeyException {
 		if (_clients.containsKey(key))
 			throw new DuplicateEntityKeyException(key);
-		_clients.put(key, new Client(key, name, taxNumber, ClientLevel.NORMAL, true));
+		_clients.put(key,
+				new Client(key, name, taxNumber, ClientLevel.NORMAL, true));
 	}
 
 	/**
@@ -78,7 +80,10 @@ public class Network implements Serializable {
 	 * @return Collection<String> of clients in there string format.
 	 */
 	public Collection<String> showAllClients() {
-		return _clients.values().stream().map(e -> e.toString()).toList();
+		return _clients.values().stream()
+								.sorted()
+								.map(Client::toString)
+								.toList();
 	}
 
 	/**
@@ -88,7 +93,8 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 * @throws UnknownKeyException if client don't exist in network.
 	 */
-	public Collection<String> showNotifications(String key) throws UnknownKeyException {
+	public Collection<String> showNotifications(String key)
+			throws UnknownKeyException {
 		return findClient(key).getNotifications();
 	}
 
@@ -100,12 +106,13 @@ public class Network implements Serializable {
 	 * @return boolean true if successful in changing status.
 	 * @throws UnknownKeyException if client don't exist in network.
 	 */
-	public boolean toggleNotificationStatus(String key, boolean status) throws UnknownKeyException {
+	public boolean toggleNotificationStatus(String key, boolean status)
+			throws UnknownKeyException {
 		Client client = findClient(key);
-		if (client.is_receiveNotification() == status) {
+		if (client.isReceiveNotification() == status) {
 			return false;
 		} else {
-			client.set_receiveNotification(status);
+			client.setReceiveNotification(status);
 			return true;
 		}
 	}
@@ -143,32 +150,34 @@ public class Network implements Serializable {
 	 *                             long.
 	 */
 	public boolean validTerminalID(String id) throws UnknownKeyException {
-		return Pattern.matches("[0-9]{6}", id);
+		return Pattern.matches("\\d{6}", id);
 	}
 
 	/**
 	 * Registers a terminal based on their type
+	 * 
 	 * @param key      Terminal Id
 	 * @param clientID Terminal owner Id
 	 * @param type     Terminal type
 	 * @return Terminal
-	 * @throws UnknownKeyException if the key is not valid
-	 * @throws DuplicateEntityKeyException if the key already exists 
-	 * @throws KeyFormattingExemption if the key is not valid
+	 * @throws UnknownKeyException         if the key is not valid
+	 * @throws DuplicateEntityKeyException if the key already exists
+	 * @throws KeyFormattingExemption      if the key is not valid
 	 */
-	public Terminal registerTerminal(String key, String clientID, String type) throws UnknownKeyException,
-			DuplicateEntityKeyException, KeyFormattingExemption {
+	public Terminal registerTerminal(String key, String clientID, String type)
+			throws UnknownKeyException, DuplicateEntityKeyException,
+			KeyFormattingExemption {
 		if (validTerminalID(key)) {
 			Terminal tempTerminal;
 			switch (type) {
-				case "BASIC":
-					tempTerminal = new BasicTerminal(key, findClient(clientID));
-					break;
-				case "FANCY":
-					tempTerminal = new FancyTerminal(key, findClient(clientID));
-					break;
-				default:
-					return null;
+			case "BASIC":
+				tempTerminal = new BasicTerminal(key, findClient(clientID));
+				break;
+			case "FANCY":
+				tempTerminal = new FancyTerminal(key, findClient(clientID));
+				break;
+			default:
+				return null;
 			}
 			findClient(clientID).addTerminal(tempTerminal);
 			if (_terminals.containsKey(key)) {
@@ -188,9 +197,7 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 */
 	public Collection<String> showAllTerminals() {
-		return _terminals.values().stream()
-				.map(e -> e.toString())
-				.toList();
+		return _terminals.values().stream().map(Terminal::toString).toList();
 	}
 
 	/**
@@ -201,8 +208,7 @@ public class Network implements Serializable {
 	public Collection<String> showTerminalsWithoutCommunications() {
 		return _terminals.values().stream()
 				.filter(e -> e.numberCommunications() == 0)
-				.map(e -> e.toString())
-				.toList();
+				.map(Terminal::toString).toList();
 	}
 
 	/**
@@ -210,10 +216,11 @@ public class Network implements Serializable {
 	 * 
 	 * @param filename name of the text input file
 	 * @throws UnrecognizedEntryException if some entry is not correct
-	 * @throws IOException                if there is an IO error while processing
-	 *                                    the text file
+	 * @throws IOException                if there is an IO error while
+	 *                                    processing the text file
 	 */
-	void importFile(String filename) throws UnrecognizedEntryException, IOException {
+	void importFile(String filename)
+			throws UnrecognizedEntryException, IOException {
 		new Parser(this).parseFile(filename);
 	}
 }

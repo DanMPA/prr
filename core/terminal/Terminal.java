@@ -21,9 +21,9 @@ abstract public class Terminal implements Serializable {
 	private Client _owner;
 	private int _numberCommunications;
 
-	public Terminal(String _id, Client _owner) {
-		this._id = _id;
-		this._owner = _owner;
+	public Terminal(String id, Client owner) {
+		this._id = id;
+		this._owner = owner;
 		this._mode = TerminalMode.IDLE;
 		this._terminalFriends = new TreeSet<String>();
 	}
@@ -148,7 +148,7 @@ abstract public class Terminal implements Serializable {
 	 * Gets terminal ID.
 	 * @return String
 	 */
-	public String get_id() {
+	public String getId() {
 		return _id;
 	}
 
@@ -192,7 +192,7 @@ abstract public class Terminal implements Serializable {
 	 * Gets Terminal's mode
 	 * @return TerminalMode
 	 */
-	public TerminalMode get_mode() {
+	public TerminalMode getMode() {
 		return _mode;
 	}
 
@@ -204,11 +204,11 @@ abstract public class Terminal implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		if (_terminalFriends.size() != 0) {
-			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
+		if (!_terminalFriends.isEmpty()) {
+			return String.join("|", _id, _owner.getKey(), _mode.toString(), String.format("%.0f", _payments),
 					String.format("%.0f", _debt), String.join(",", _terminalFriends));
 		} else {
-			return String.join("|", _id, _owner.get_key(), _mode.toString(), String.format("%.0f", _payments),
+			return String.join("|", _id, _owner.getKey(), _mode.toString(), String.format("%.0f", _payments),
 					String.format("%.0f", _debt));
 		}
 

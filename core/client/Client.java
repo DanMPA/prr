@@ -7,7 +7,7 @@ import java.util.Collection;
 import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 
-public class Client implements Serializable {
+public class Client implements Serializable,Comparable{
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _key;
@@ -28,12 +28,12 @@ public class Client implements Serializable {
 	 * @param _level
 	 * @param _receiveNotification
 	 */
-	public Client(String _key, String _name, int _taxNumber, ClientLevel _level, boolean _receiveNotification) {
-		this._key = _key;
-		this._name = _name;
-		this._taxNumber = _taxNumber;
-		this._level = _level;
-		this._receiveNotification = _receiveNotification;
+	public Client(String key, String name, int taxNumber, ClientLevel level, boolean receiveNotification) {
+		this._key = key;
+		this._name = name;
+		this._taxNumber = taxNumber;
+		this._level = level;
+		this._receiveNotification = receiveNotification;
 		this._associatedTerminals = new ArrayList<>();
 		this._terminalNotifications = new ArrayList<>();
 	}
@@ -103,7 +103,7 @@ public class Client implements Serializable {
 	 * 
 	 * @return String
 	 */
-	public String get_key() {
+	public String getKey() {
 		return _key;
 	}
 
@@ -112,7 +112,7 @@ public class Client implements Serializable {
 	 * 
 	 * @return boolean true when client is receiving notification.
 	 */
-	public boolean is_receiveNotification() {
+	public boolean isReceiveNotification() {
 		return _receiveNotification;
 	}
 
@@ -121,8 +121,8 @@ public class Client implements Serializable {
 	 * 
 	 * @param _receiveNotification
 	 */
-	public void set_receiveNotification(boolean _receiveNotification) {
-		this._receiveNotification = _receiveNotification;
+	public void setReceiveNotification(boolean receiveNotification) {
+		this._receiveNotification = receiveNotification;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class Client implements Serializable {
 	 * 
 	 * @return double
 	 */
-	public double get_payments() {
+	public double getPayments() {
 		return _payments;
 	}
 
@@ -139,7 +139,7 @@ public class Client implements Serializable {
 	 * 
 	 * @return double
 	 */
-	public double get_debts() {
+	public double getDebts() {
 		return _debts;
 	}
 
@@ -150,5 +150,11 @@ public class Client implements Serializable {
 	 */
 	public Collection<String> getNotifications() {
 		return _receiveNotification ? _terminalNotifications.stream().map(e -> e.toString()).toList() : null;
+	}
+	@Override
+	public int compareTo(Object o) {
+		if (o instanceof Client)
+			return this.getKey().toLowerCase().compareTo(((Client)o).getKey().toLowerCase());
+		return 0;
 	}
 }

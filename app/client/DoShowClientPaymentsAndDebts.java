@@ -12,20 +12,20 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClientPaymentsAndDebts extends Command<Network> {
 
-	final private String CLIENT_ID = "ClientID";
+	final private String clientId = "ClientID";
 
 	DoShowClientPaymentsAndDebts(Network receiver) {
 		super(Label.SHOW_CLIENT_BALANCE, receiver);
-		addStringField(CLIENT_ID, Message.key());
+		addStringField(clientId, Message.key());
 	}
 
 	@Override
 	protected final void execute() throws CommandException {
 		try {
-			Client tempClient = _receiver.findClient(CLIENT_ID);
-			Message.clientPaymentsAndDebts(CLIENT_ID, (long) tempClient.get_payments(), (long) tempClient.get_debts());
+			Client tempClient = _receiver.findClient(clientId);
+			Message.clientPaymentsAndDebts(clientId, (long) tempClient.getPayments(), (long) tempClient.getDebts());
 		} catch (UnknownKeyException ex) {
-			throw new UnknownClientKeyException(stringField(CLIENT_ID));
+			throw new UnknownClientKeyException(stringField(clientId));
 		}
 	}
 }

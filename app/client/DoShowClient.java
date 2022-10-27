@@ -14,17 +14,17 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClient extends Command<Network> {
 
-  final private String CLIENT_ID = "ClientID";
+  private final String _clientId = "ClientID";
 
   DoShowClient(Network receiver) {
     super(Label.SHOW_CLIENT, receiver);
-    addStringField(CLIENT_ID, Message.key());
+    addStringField(_clientId, Message.key());
   }
   
   @Override
   protected final void execute() throws CommandException {
     try{
-      String clientId = stringField(CLIENT_ID);
+      String clientId = stringField(_clientId);
       String client = _receiver.showClient(clientId);
       Collection<String> clientNotifications= _receiver.showNotifications(clientId);
       _display.add(client);
@@ -32,7 +32,7 @@ class DoShowClient extends Command<Network> {
       _display.display();
       
     } catch(UnknownKeyException ex){
-     throw new UnknownClientKeyException(stringField(CLIENT_ID)); 
+     throw new UnknownClientKeyException(stringField(_clientId)); 
     }
   }
 }

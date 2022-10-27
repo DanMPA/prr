@@ -9,5 +9,6 @@ public class Communication implements Serializable {
 	private boolean _isPaid;
 	private double _cost;
 	private boolean _isOngoing;
+	
 
 }

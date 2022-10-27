@@ -4,8 +4,8 @@ import prr.core.client.Client;
 
 public class BasicTerminal extends Terminal {
 
-	public BasicTerminal(String _id, Client _owner) {
-		super(_id, _owner);
+	public BasicTerminal(String id, Client owner) {
+		super(id, owner);
 	}
 
 	public void makeVideoCall() {

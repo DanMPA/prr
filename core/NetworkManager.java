@@ -104,7 +104,7 @@ public class NetworkManager {
 	 * Gets file's name
 	 * @return 
 	 */
-	public String get_fileName() {
+	public String getFileName() {
 		return _fileName;
 	}
 }
