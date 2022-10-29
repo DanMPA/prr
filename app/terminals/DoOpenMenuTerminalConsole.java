@@ -8,7 +8,6 @@ import prr.app.exception.UnknownTerminalKeyException;
 import prr.app.terminal.Menu;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME add mode import if needed
 
 /**
  * Open a specific terminal's menu.
