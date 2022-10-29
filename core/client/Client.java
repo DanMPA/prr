@@ -149,7 +149,7 @@ public class Client implements Serializable,Comparable{
 	 * @return Collection<String> Collection of Notification in string format.
 	 */
 	public Collection<String> getNotifications() {
-		return _receiveNotification ? _terminalNotifications.stream().map(e -> e.toString()).toList() : null;
+		return _receiveNotification ? _terminalNotifications.stream().map(Notification::toString).toList() : null;
 	}
 	@Override
 	public int compareTo(Object o) {

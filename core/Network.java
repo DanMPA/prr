@@ -3,6 +3,7 @@ package prr.core;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -208,8 +209,25 @@ public class Network implements Serializable {
 	public Collection<String> showTerminalsWithoutCommunications() {
 		return _terminals.values().stream()
 				.filter(e -> e.numberCommunications() == 0)
-				.map(Terminal::toString).toList();
+				.map(Terminal::toString)
+				.toList();
 	}
+
+
+	public Collection<String> showClientsWithoutDebt() {
+		return _clients.values().stream()
+				.filter(e -> e.getDebts() == 0)
+				.map(Client::toString)
+				.toList();
+	}
+
+	public Collection<String> showClientsWithDebt() {
+		return _clients.values().stream()
+				.filter(e -> e.getDebts() != 0)
+				.map(Client::toString)
+				.toList();
+	}
+
 
 	/**
 	 * Read text input file and create corresponding domain entities.
