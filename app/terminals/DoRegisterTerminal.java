@@ -8,8 +8,6 @@ import prr.core.Network;
 import prr.core.exception.DuplicateEntityKeyException;
 import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnknownKeyException;
-import prr.core.terminal.TerminalType;
-
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
