@@ -1,9 +1,11 @@
 package prr.app.lookup;
 
+import java.util.Comparator;
+
 import prr.core.Network;
+import prr.core.client.Client;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME more imports if needed
 
 /**
  * Show clients with negative balance.
@@ -16,6 +18,6 @@ class DoShowClientsWithDebts extends Command<Network> {
 
   @Override
   protected final void execute() throws CommandException {
-	_display.popup(_receiver.showClientsWithDebt());
+	_display.popup(_receiver.showClients(Comparator.comparingDouble(Client::getDebts),Client::hasDebt));
   }
 }

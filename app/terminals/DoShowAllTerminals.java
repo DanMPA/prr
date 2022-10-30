@@ -1,6 +1,9 @@
 package prr.app.terminals;
 
+import java.util.Comparator;
+
 import prr.core.Network;
+import prr.core.terminal.Terminal;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -15,7 +18,7 @@ class DoShowAllTerminals extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
-		_display.addAll(_receiver.showAllTerminals());
+		_display.addAll(_receiver.showAllTerminals(Comparator.comparing(Terminal::getId)));
 		_display.display();
 	}
 }

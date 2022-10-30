@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import prr.core.client.Client;
@@ -75,18 +76,23 @@ public class Network implements Serializable {
 		return findClient(key).toString();
 	}
 
-	/**
-	 * Gets all the clients in the network.
-	 * 
-	 * @return Collection<String> of clients in there string format.
-	 */
-	public Collection<String> showAllClients() {
+	
+	public Collection<String> showClients(Comparator<Client> comparatorOfClient) {
 		return _clients.values().stream()
-								.sorted()
-								.map(Client::toString)
-								.toList();
+					.sorted(comparatorOfClient)
+					.map(Client::toString)
+					.toList();
 	}
 
+	// Dont know if working at the moment still need to see if it sorts.
+	public Collection<String> showClients(Comparator<Client> comparatorOfClient,Predicate<Client> clientFilter) {
+		return _clients.values().stream()
+				.filter(clientFilter)
+				.sorted(comparatorOfClient)
+				.map(Client::toString)
+				.toList();
+	}
+	
 	/**
 	 * Gets all the notifications of a specific Client.
 	 * 
@@ -197,8 +203,11 @@ public class Network implements Serializable {
 	 * 
 	 * @return Collection<String>
 	 */
-	public Collection<String> showAllTerminals() {
-		return _terminals.values().stream().map(Terminal::toString).toList();
+	public Collection<String> showAllTerminals(Comparator<Terminal> coparatorOfTerminals) {
+		return _terminals.values().stream()
+				.sorted(coparatorOfTerminals)
+				.map(Terminal::toString)
+				.toList();
 	}
 
 	/**
@@ -210,21 +219,6 @@ public class Network implements Serializable {
 		return _terminals.values().stream()
 				.filter(e -> e.numberCommunications() == 0)
 				.map(Terminal::toString)
-				.toList();
-	}
-
-
-	public Collection<String> showClientsWithoutDebt() {
-		return _clients.values().stream()
-				.filter(e -> e.getDebts() == 0)
-				.map(Client::toString)
-				.toList();
-	}
-
-	public Collection<String> showClientsWithDebt() {
-		return _clients.values().stream()
-				.filter(e -> e.getDebts() != 0)
-				.map(Client::toString)
 				.toList();
 	}
 

@@ -7,7 +7,7 @@ import java.util.Collection;
 import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 
-public class Client implements Serializable,Comparable{
+public class Client implements Serializable{
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _key;
@@ -143,6 +143,14 @@ public class Client implements Serializable,Comparable{
 		return _debts;
 	}
 
+	public boolean hasDebt(){
+		return _debts > 0;
+	}
+
+	public boolean hasNoDebt(){
+		return _debts == 0;
+	}
+
 	/**
 	 * Returns all the Notification associated to this client.
 	 * 
@@ -150,11 +158,5 @@ public class Client implements Serializable,Comparable{
 	 */
 	public Collection<String> getNotifications() {
 		return _receiveNotification ? _terminalNotifications.stream().map(Notification::toString).toList() : null;
-	}
-	@Override
-	public int compareTo(Object o) {
-		if (o instanceof Client)
-			return this.getKey().toLowerCase().compareTo(((Client)o).getKey().toLowerCase());
-		return 0;
 	}
 }
