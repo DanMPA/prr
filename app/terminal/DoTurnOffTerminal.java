@@ -4,7 +4,6 @@ import prr.core.Network;
 import prr.core.terminal.Terminal;
 import prr.core.terminal.TerminalMode;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME add more imports if needed
 
 /**
  * Turn off the terminal.

@@ -152,6 +152,9 @@ abstract public class Terminal implements Serializable {
 		return _id;
 	}
 
+	public double getBalance(){
+		return _payments-_debt;
+	}
 	/**
 	 * Compute hashCode with reference to terminal's ID
 	 * @return int
