@@ -1,10 +1,16 @@
 package prr.core.terminal;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import prr.core.client.Client;
+import prr.core.communication.Communication;
+import prr.core.communication.TextCommunication;
 
 /**
  * Abstract terminal.
@@ -20,12 +26,16 @@ public abstract class Terminal implements Serializable {
 	private Collection<String> _terminalFriends;
 	private Client _owner;
 	private int _numberCommunications;
+	private List<Communication> _communicationsMade;
+	private List<Communication> _communicationsRecived;
 
-	public Terminal(String id, Client owner) {
+	protected Terminal(String id, Client owner) {
 		this._id = id;
 		this._owner = owner;
 		this._mode = TerminalMode.IDLE;
-		this._terminalFriends = new TreeSet<String>();
+		this._terminalFriends = new TreeSet<>();
+		this._communicationsMade = new ArrayList<>();
+		this._communicationsRecived = new ArrayList<>();
 	}
 
 	/**
@@ -37,23 +47,8 @@ public abstract class Terminal implements Serializable {
 		return _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
 	}
 
-	/**
-	 * Checks if this terminal can end the current interactive communication.
-	 *
-	 * @return true if this terminal is busy (i.e., it has an active interactive
-	 *         communication) and
-	 *         it was the originator of this communication.
-	 **/
-	public void addCommunication() {
-		_numberCommunications += 1;
-	}
-
-	/**
-	 * Gets number of Communications.
-	 * @return int
-	 */
-	public int numberCommunications() {
-		return _numberCommunications;
+	public boolean canReciveCommunication(){
+		return _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
 	}
 
 	/**
@@ -65,18 +60,35 @@ public abstract class Terminal implements Serializable {
 	}
 
 	/**
-	 * @param to
-	 * @param message
-	 */
-	public void makeSMS(Terminal to, String message) {
+	 * Checks if this terminal can end the current interactive communication.
+	 *
+	 * @return true if this terminal is busy (i.e., it has an active interactive
+	 *         communication) and
+	 *         it was the originator of this communication.
+	 **/
+	public void addCommunicationMade(Communication communication) {
+		_communicationsMade.add(communication);
+		_numberCommunications += 1;
+	}
 
+	public void addCommunicationRecived(Communication communication) {
+		_communicationsRecived.add(communication);
 	}
 
 	/**
-	 * @param from
+	 * Gets number of Communications.
+	 * @return int
 	 */
-	public void acceptSMS(Terminal from) {
+	public int numberCommunications() {
+		return _numberCommunications;
+	}
 
+
+	public Communication makeTexCommunication(Terminal destination, String message) {
+		TextCommunication newCommunicaiton = new TextCommunication(this,destination,message);
+		this.addCommunicationMade(newCommunicaiton);
+		destination.addCommunicationRecived(newCommunicaiton);
+		return newCommunicaiton;
 	}
 
 	/**
@@ -199,6 +211,11 @@ public abstract class Terminal implements Serializable {
 		return _mode;
 	}
 
+
+	public Collection<Communication> getCommunicationsMade(){
+		return _communicationsMade;
+	}
+	
 	/**
 	 * Converts Terminal Object to a String representation
 	 * @return String in the format

@@ -2,8 +2,10 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Predicate;
@@ -11,8 +13,11 @@ import java.util.regex.Pattern;
 
 import prr.core.client.Client;
 import prr.core.client.ClientLevel;
+import prr.core.communication.Communication;
+import prr.core.communication.TextCommunication;
 import prr.core.exception.DuplicateEntityKeyException;
 import prr.core.exception.KeyFormattingExemption;
+import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 import prr.core.terminal.BasicTerminal;
@@ -29,11 +34,12 @@ public class Network implements Serializable {
 
 	private Map<String, Client> _clients;
 	private Map<String, Terminal> _terminals;
-	private Collection<Communication> _communication;
+	private List<Communication> _allCommunication;
 
 	public Network() {
 		this._clients = new TreeMap<>();
 		this._terminals = new TreeMap<>();
+		this._allCommunication = new ArrayList<>();
 	}
 
 	/**
@@ -77,19 +83,17 @@ public class Network implements Serializable {
 	}
 
 	
-	public Collection<String> showClients(Comparator<Client> comparatorOfClient) {
+	public Collection<Client> showClients(Comparator<Client> comparatorOfClient) {
 		return _clients.values().stream()
 					.sorted(comparatorOfClient)
-					.map(Client::toString)
 					.toList();
 	}
 
 	// Dont know if working at the moment still need to see if it sorts.
-	public Collection<String> showClients(Comparator<Client> comparatorOfClient,Predicate<Client> clientFilter) {
+	public Collection<Client> showClients(Comparator<Client> comparatorOfClient,Predicate<Client> clientFilter) {
 		return _clients.values().stream()
 				.filter(clientFilter)
 				.sorted(comparatorOfClient)
-				.map(Client::toString)
 				.toList();
 	}
 	
@@ -203,10 +207,9 @@ public class Network implements Serializable {
 	 * 
 	 * @return Collection<String>
 	 */
-	public Collection<String> showAllTerminals(Comparator<Terminal> coparatorOfTerminals) {
+	public Collection<Terminal> showAllTerminals(Comparator<Terminal> coparatorOfTerminals) {
 		return _terminals.values().stream()
 				.sorted(coparatorOfTerminals)
-				.map(Terminal::toString)
 				.toList();
 	}
 
@@ -215,13 +218,30 @@ public class Network implements Serializable {
 	 * 
 	 * @return Collection<String>
 	 */
-	public Collection<String> showTerminalsWithoutCommunications() {
+	public Collection<Terminal> showTerminalsWithoutCommunications() {
 		return _terminals.values().stream()
 				.filter(e -> e.numberCommunications() == 0)
-				.map(Terminal::toString)
 				.toList();
 	}
 
+	public Collection<Communication> showCommunicationsMade(String clientKey,Comparator<Communication> compaterOfCommuncations) throws UnknownKeyException {
+		return findClient(clientKey).getCommunicationsMade().stream()
+				.sorted(compaterOfCommuncations)
+				.toList();
+	}
+
+	public void generateTextCommunication(Terminal origin,String destinationKey,String message) throws UnknownKeyException, UnavailableEntity{
+		Terminal destenation = findTerminal(destinationKey);
+		if(destenation.canReciveCommunication()){
+			_allCommunication.add(origin.makeTexCommunication(destenation, message));
+		} else{
+			throw new UnavailableEntity(destinationKey);
+		}
+	}
+
+	public void generateInteractiveCommunication(Terminal origin,String destinationKey){
+
+	}
 
 	/**
 	 * Read text input file and create corresponding domain entities.
