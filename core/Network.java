@@ -224,8 +224,15 @@ public class Network implements Serializable {
 				.toList();
 	}
 
+	public Collection<Communication> showCommunications(Predicate<Communication> communicationFilter, Comparator<Communication> compaterOfCommuncations){
+		return _allCommunication.stream()
+				.filter(communicationFilter)
+				.sorted(compaterOfCommuncations)
+				.toList();
+	}
+
 	public Collection<Communication> showCommunications(String clientKey,Comparator<Communication> compaterOfCommuncations,Function<Terminal,Stream<Communication>> terminalCommunications) throws UnknownKeyException {
-		return findClient(clientKey).getCommunications(terminalCommunications).stream()
+		return findClient(clientKey).getCommunications(terminalCommunications).stream().parallel()
 				.sorted(compaterOfCommuncations)
 				.toList();
 	}
@@ -235,6 +242,7 @@ public class Network implements Serializable {
 		if(destenation.canReciveCommunication()){
 			_allCommunication.add(origin.makeTexCommunication(destenation, message));
 		} else{
+			// FIXME Add notifications.
 			throw new UnavailableEntity(destinationKey);
 		}
 	}

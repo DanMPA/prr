@@ -38,4 +38,12 @@ public abstract class Communication implements Serializable {
 				_destination.getId(), String.valueOf(getUnits()),
 				String.valueOf(getPrice()), String.valueOf(getSatus()));
 	}
+
+	public CommunicationStatus getCommunicationStatus() {
+		return _communicationStatus;
+	}
+
+	public boolean isCommunicationOngoing() {
+		return _communicationStatus == CommunicationStatus.ONGOING;
+	}
 }

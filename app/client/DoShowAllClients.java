@@ -17,6 +17,6 @@ class DoShowAllClients extends Command<Network> {
   
   @Override
   protected final void execute() throws CommandException {
-    _display.popup(_receiver.showClients(Comparator.comparing(e -> e.getKey().toLowerCase())));
+    _display.popup(_receiver.showClients(Comparator.comparing(client -> client.getKey().toLowerCase())));
   }
 }
