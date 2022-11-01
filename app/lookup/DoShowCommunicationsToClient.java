@@ -26,7 +26,7 @@ class DoShowCommunicationsToClient extends Command<Network> {
 			_display.popup(
 					_receiver.showCommunications(stringField("ClientId"),
 							Comparator.comparing(Communication::getId),
-							Terminal::getCommunicationsRecived));
+							Terminal::getCommunicationsRecivedStream));
 		} catch (UnknownKeyException e) {
 			throw new UnknownClientKeyException(stringField("ClientId"));
 		}

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
@@ -212,10 +210,10 @@ public abstract class Terminal implements Serializable {
 		return _mode;
 	}
 
-	public Stream<Communication> getCommunicationsMade(){
+	public Stream<Communication> getCommunicationsMadeStream(){
 		return _communicationsMade.stream();
 	}
-	public Stream<Communication> getCommunicationsRecived(){
+	public Stream<Communication> getCommunicationsRecivedStream(){
 		return _communicationsRecived.stream();
 	}
 	
