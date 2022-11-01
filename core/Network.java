@@ -8,13 +8,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import prr.core.client.Client;
 import prr.core.client.ClientLevel;
 import prr.core.communication.Communication;
-import prr.core.communication.TextCommunication;
 import prr.core.exception.DuplicateEntityKeyException;
 import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnavailableEntity;
@@ -202,30 +203,28 @@ public class Network implements Serializable {
 
 	}
 
-	/**
-	 * Gets all terminals in their string format.
-	 * 
-	 * @return Collection<String>
-	 */
-	public Collection<Terminal> showAllTerminals(Comparator<Terminal> coparatorOfTerminals) {
+
+	public Collection<Terminal> showTerminals(Comparator<Terminal> coparatorOfTerminals) {
 		return _terminals.values().stream()
 				.sorted(coparatorOfTerminals)
 				.toList();
 	}
 
-	/**
-	 * Gets all terminals in their string format if they have no communications.
-	 * 
-	 * @return Collection<String>
-	 */
-	public Collection<Terminal> showTerminalsWithoutCommunications() {
+	public Collection<Terminal> showTerminal(Comparator<Terminal> coparatorOfTerminals,Predicate<Terminal> terminalFilter) {
 		return _terminals.values().stream()
-				.filter(e -> e.numberCommunications() == 0)
+				.filter(terminalFilter)
+				.sorted(coparatorOfTerminals)
 				.toList();
 	}
 
-	public Collection<Communication> showCommunicationsMade(String clientKey,Comparator<Communication> compaterOfCommuncations) throws UnknownKeyException {
-		return findClient(clientKey).getCommunicationsMade().stream()
+	public Collection<Communication> showCommunications(Comparator<Communication> compaterOfCommuncations){
+		return _allCommunication.stream()
+				.sorted(compaterOfCommuncations)
+				.toList();
+	}
+
+	public Collection<Communication> showCommunications(String clientKey,Comparator<Communication> compaterOfCommuncations,Function<Terminal,Stream<Communication>> terminalCommunications) throws UnknownKeyException {
+		return findClient(clientKey).getCommunications(terminalCommunications).stream()
 				.sorted(compaterOfCommuncations)
 				.toList();
 	}

@@ -1,9 +1,11 @@
 package prr.app.lookup;
 
+import java.util.Comparator;
+
 import prr.core.Network;
+import prr.core.terminal.Terminal;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME add more imports if needed
 
 /**
  * Show unused terminals (without communications).
@@ -16,6 +18,8 @@ class DoShowUnusedTerminals extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
-		_display.popup(_receiver.showTerminalsWithoutCommunications());
+		_display.popup(
+				_receiver.showTerminal(Comparator.comparing(Terminal::getId),
+						e -> e.numberCommunications() == 0));
 	}
 }

@@ -18,7 +18,7 @@ class DoShowAllTerminals extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
-		_display.addAll(_receiver.showAllTerminals(Comparator.comparing(Terminal::getId)));
+		_display.addAll(_receiver.showTerminals(Comparator.comparing(Terminal::getId)));
 		_display.display();
 	}
 }

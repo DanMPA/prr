@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import prr.core.client.Client;
 import prr.core.communication.Communication;
@@ -211,9 +212,11 @@ public abstract class Terminal implements Serializable {
 		return _mode;
 	}
 
-
-	public Collection<Communication> getCommunicationsMade(){
-		return _communicationsMade;
+	public Stream<Communication> getCommunicationsMade(){
+		return _communicationsMade.stream();
+	}
+	public Stream<Communication> getCommunicationsRecived(){
+		return _communicationsRecived.stream();
 	}
 	
 	/**

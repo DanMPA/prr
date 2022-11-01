@@ -3,9 +3,7 @@ package prr.core.client;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import prr.core.communication.Communication;
@@ -156,13 +154,8 @@ public class Client implements Serializable{
 		return _debts == 0;
 	}
 
-	public Collection<Communication> getCommunicationsMade(){
-		Collection<Communication> allClientCommunicationsMade = new ArrayList<>();
-
-		for(Terminal aTerminal:_associatedTerminals){
-				allClientCommunicationsMade.addAll(aTerminal.getCommunicationsMade());
-		}
-		return allClientCommunicationsMade;
+	public Collection<Communication> getCommunications(Function<Terminal,Stream<Communication>> terminal){
+		return _associatedTerminals.stream().flatMap(terminal).toList();
 	}
 
 	/**

@@ -1,6 +1,9 @@
 package prr.app.lookup;
 
+import java.util.Comparator;
+
 import prr.core.Network;
+import prr.core.communication.Communication;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -18,6 +21,6 @@ class DoShowAllCommunications extends Command<Network> {
 	 */
 	@Override
 	protected final void execute() throws CommandException {
-		_display.popup(_receiver.showTerminalsWithoutCommunications());
+		_display.popup(_receiver.showCommunications(Comparator.comparing(Communication::getId)));
 	}
 }
