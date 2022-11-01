@@ -254,6 +254,9 @@ public class Network implements Serializable {
 				_allCommunication.add(origin.makeVoiceCall(destination));
 			}
 		}
+		if (communcticationType.equals("VIDEO")){
+			_allCommunication.add(origin.makeVideoCall(destination));
+		}
 	}
 
 	/**

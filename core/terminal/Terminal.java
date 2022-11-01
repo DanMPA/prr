@@ -109,7 +109,10 @@ public abstract class Terminal implements Serializable {
 	 * @param to
 	 */
 	public void makeVideoCall(Terminal to) {
-
+		Communication newCommunicaiton = new VideoCommunication(this, destination);
+		this.addCommunicationMade(newCommunicaiton);
+		destination.addCommunicationMade(newCommunicaiton);
+		return newCommunicaiton;
 	}
 
 	/**
