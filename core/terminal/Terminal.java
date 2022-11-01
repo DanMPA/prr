@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import prr.core.client.Client;
 import prr.core.communication.Communication;
 import prr.core.communication.TextCommunication;
+import prr.core.communication.VideoCommunication;
 import prr.core.communication.VoiceCommunication;
 
 /**
@@ -108,7 +109,7 @@ public abstract class Terminal implements Serializable {
 	/**
 	 * @param to
 	 */
-	public void makeVideoCall(Terminal to) {
+	public Communication makeVideoCall(Terminal destination) {
 		Communication newCommunicaiton = new VideoCommunication(this, destination);
 		this.addCommunicationMade(newCommunicaiton);
 		destination.addCommunicationMade(newCommunicaiton);
