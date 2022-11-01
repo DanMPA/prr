@@ -2,6 +2,7 @@ package prr.core;
 
 import java.io.IOException;
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -21,9 +22,9 @@ import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
-import prr.core.terminal.BasicTerminal;
-import prr.core.terminal.FancyTerminal;
 import prr.core.terminal.Terminal;
+import prr.core.terminal.FancyTerminal;
+import prr.core.terminal.BasicTerminal;
 
 /**
  * Class Network that represents a amazing Network named prr a company by cats.
