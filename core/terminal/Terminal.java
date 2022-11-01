@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import prr.core.client.Client;
 import prr.core.communication.Communication;
 import prr.core.communication.TextCommunication;
+import prr.core.communication.VoiceCommunication;
 
 /**
  * Abstract terminal.
@@ -84,17 +85,17 @@ public abstract class Terminal implements Serializable {
 
 
 	public Communication makeTexCommunication(Terminal destination, String message) {
-		TextCommunication newCommunicaiton = new TextCommunication(this,destination,message);
+		Communication newCommunicaiton = new TextCommunication(this,destination,message);
 		this.addCommunicationMade(newCommunicaiton);
 		destination.addCommunicationRecived(newCommunicaiton);
 		return newCommunicaiton;
 	}
 
-	/**
-	 * @param to
-	 */
-	public void makeVoiceCall(Terminal to) {
-
+	public Communication makeVoiceCall(Terminal destination) {
+		Communication newCommunicaiton = new VoiceCommunication(this, destination);
+		this.addCommunicationMade(newCommunicaiton);
+		destination.addCommunicationMade(newCommunicaiton);
+		return newCommunicaiton;
 	}
 
 	/**

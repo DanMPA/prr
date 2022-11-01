@@ -4,7 +4,7 @@ import prr.core.terminal.Terminal;
 
 public class VoiceCommunication extends InteractiveCommunication{
 
-	protected VoiceCommunication(Terminal origen,Terminal destination) {
+	public VoiceCommunication(Terminal origen,Terminal destination) {
 		super(origen, destination);
 	}
 

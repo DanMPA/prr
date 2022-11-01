@@ -238,17 +238,22 @@ public class Network implements Serializable {
 	}
 
 	public void generateTextCommunication(Terminal origin,String destinationKey,String message) throws UnknownKeyException, UnavailableEntity{
-		Terminal destenation = findTerminal(destinationKey);
-		if(destenation.canReciveCommunication()){
-			_allCommunication.add(origin.makeTexCommunication(destenation, message));
+		Terminal destination = findTerminal(destinationKey);
+		if(destination.canReciveCommunication()){
+			_allCommunication.add(origin.makeTexCommunication(destination, message));
 		} else{
 			// FIXME Add notifications.
 			throw new UnavailableEntity(destinationKey);
 		}
 	}
 
-	public void generateInteractiveCommunication(Terminal origin,String destinationKey){
-
+	public void generateInteractiveCommunication(Terminal origin,String destinationKey,String communcticationType)throws UnknownKeyException, UnavailableEntity{
+		Terminal destination = findTerminal(destinationKey);
+		if (destination.canReciveCommunication()){
+			if(communcticationType.equals("VOICE")){
+				_allCommunication.add(origin.makeVoiceCall(destination));
+			}
+		}
 	}
 
 	/**

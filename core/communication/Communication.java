@@ -16,21 +16,23 @@ public abstract class Communication implements Serializable {
 	private Terminal _destination;
 	private CommunicationStatus _communicationStatus;
 
-
 	protected Communication(Terminal origen, Terminal destination) {
 		this._id = _communicationNumber++;
 		this._origen = origen;
 		this._destination = destination;
 	}
 
-	public int getId() {
-	return _id;
-	}
-
 	public abstract String getType();
+
 	public abstract int getUnits();
+
 	public abstract double getPrice();
+
 	public abstract CommunicationStatus getSatus();
+
+	public int getId() {
+		return _id;
+	}
 
 	@Override
 	public String toString() {
