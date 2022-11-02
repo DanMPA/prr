@@ -5,7 +5,6 @@ import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
 import prr.core.terminal.Terminal;
 import prr.app.exception.UnknownTerminalKeyException;
-import pt.tecnico.uilib.forms.Form;
 import pt.tecnico.uilib.menus.CommandException;
 
 //FIXME add more imports if needed
