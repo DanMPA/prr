@@ -23,7 +23,7 @@ class DoShowClientPaymentsAndDebts extends Command<Network> {
 	protected final void execute() throws CommandException {
 		try {
 			Client tempClient = _receiver.findClient(clientId);
-			Message.clientPaymentsAndDebts(clientId, (long) tempClient.getPayments(), (long) tempClient.getDebts());
+			Message.clientPaymentsAndDebts(clientId, Math.round(tempClient.getPayments()), Math.round(tempClient.getDebts()));
 		} catch (UnknownKeyException ex) {
 			throw new UnknownClientKeyException(stringField(clientId));
 		}
