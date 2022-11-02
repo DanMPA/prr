@@ -7,10 +7,12 @@ public enum TerminalType {
 	public String toString(){
         switch(this){
         case BASIC :
-            return "Baisc";
+            return "Basic";
         case FANCY :
             return "Fancy";
-        }
-        return null;
+		default:
+			return null;
+		}
+		
     }
 }
