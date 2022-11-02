@@ -6,6 +6,7 @@ public enum TerminalMode {
     SILENT,
     OFF;    
 
+	@Override
 	public String toString(){
 		switch (this){
 			case BUSY:
@@ -17,7 +18,7 @@ public enum TerminalMode {
 			case  OFF:
 				return "OFF";
 			default:
-				return null;
+				return "";
 		}
 	}
 }

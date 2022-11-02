@@ -4,6 +4,7 @@ public enum TerminalType {
 	BASIC,
 	FANCY;
 
+	@Override
 	public String toString(){
         switch(this){
         case BASIC :
@@ -11,7 +12,7 @@ public enum TerminalType {
         case FANCY :
             return "Fancy";
 		default:
-			return null;
+			return "";
 		}
 		
     }
