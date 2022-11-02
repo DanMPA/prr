@@ -11,9 +11,11 @@ import javax.management.Notification;
 
 import prr.core.client.Client;
 import prr.core.communication.Communication;
+import prr.core.communication.InteractiveCommunication;
 import prr.core.communication.TextCommunication;
-import prr.core.communication.VideoCommunication;
 import prr.core.communication.VoiceCommunication;
+import prr.core.exception.UnsupportedCommunicationExceptionDestination;
+import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 
 /**
  * Abstract terminal.
@@ -24,44 +26,24 @@ public abstract class Terminal implements Serializable {
 	private String _id;
 	private double _debt;
 	private double _payments;
-	private TerminalMode _mode;
+	protected TerminalMode _mode;
 
 	private Collection<String> _terminalFriends;
 	private Client _owner;
 	private int _numberCommunications;
 	private List<Communication> _communicationsMade;
+	protected InteractiveCommunication _currentInteractiveCommunication;
 	private List<Communication> _communicationsRecived;
 	private List<Notification> _notifications;
 
 	protected Terminal(String id, Client owner) {
 		this._id = id;
 		this._owner = owner;
-		this._mode = TerminalMode.IDLE;
+		this._mode = new TerminalModeIdle();
 		this._terminalFriends = new TreeSet<>();
 		this._communicationsMade = new ArrayList<>();
 		this._communicationsRecived = new ArrayList<>();
 		this._notifications = new ArrayList<>();
-	}
-
-	/**
-	 * Checks if this terminal can start a new communication.
-	 *
-	 * @return true if this terminal is neither off neither busy, false otherwise.
-	 **/
-	public boolean canStartCommunication() {
-		return _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
-	}
-
-	public boolean canReciveCommunication(){
-		return _mode == TerminalMode.BUSY && _mode == TerminalMode.OFF ? false : true;
-	}
-
-	/**
-	 * Checks if this terminal can end a communication.
-	 * @return boolean
-	 */
-	public boolean canEndCommunication() {
-		return !this.canStartCommunication();
 	}
 
 	/**
@@ -92,6 +74,13 @@ public abstract class Terminal implements Serializable {
 		return _numberCommunications;
 	}	
 	
+	public boolean canStartCommunication(){
+		return _mode.canStartCommunication();
+	}
+
+	public boolean canEndCommunication(){
+		return _mode.canEndCommunication();
+	}
 	public Communication makeTextCommunication(Terminal destination, String message) {
 		Communication newCommunicaiton = new TextCommunication(this,destination,message);
 		this.addCommunicationMade(newCommunicaiton);
@@ -100,45 +89,31 @@ public abstract class Terminal implements Serializable {
 	}
 
 	public boolean canReciveTextCommunication() {
-		return this.getMode() != TerminalMode.OFF;
+		return this._mode.canReciveCommunication();
 	}
 
-	public Communication makeVoiceCall(Terminal destination) {
-		Communication newCommunicaiton = new VoiceCommunication(this, destination);
+	public Communication makeVoiceCommunication(Terminal destination) {
+		InteractiveCommunication newCommunicaiton = new VoiceCommunication(this, destination);
 		this.addCommunicationMade(newCommunicaiton);
+		this._currentInteractiveCommunication = newCommunicaiton;
 		destination.addCommunicationMade(newCommunicaiton);
 		return newCommunicaiton;
 	}
 
-	/**
-	 * @param from
-	 */
-	public void acceptVoiceCall(Terminal from) {
-
+	public boolean canReciveVoiceCommunication() {
+		return this._mode.canStartCommunication();
 	}
 
-	/**
-	 * @param to
-	 */
-	public Communication makeVideoCall(Terminal destination) {
-		Communication newCommunicaiton = new VideoCommunication(this, destination);
-		this.addCommunicationMade(newCommunicaiton);
-		destination.addCommunicationMade(newCommunicaiton);
-		return newCommunicaiton;
-	}
+	public abstract Communication makeVideoCommunication(Terminal destination) throws UnsupportedCommunicationExceptionOrigin;
+	public abstract boolean canReciveVideoCommunication() throws UnsupportedCommunicationExceptionDestination;
 
-	/**
-	 * @param from
-	 */
-	public void acceptVideoCall(Terminal from) {
 
-	}
-
-	/**
-	 * @param size
-	 */
-	public void endOngoingCommunication(int size) {
-
+	public double endOngoingCommunication(int duration) {
+		_currentInteractiveCommunication.setDuration(duration);
+		double price = _currentInteractiveCommunication.getPrice();
+		_mode = new TerminalModeIdle();
+		_currentInteractiveCommunication = null;
+		return price;
 	}
 
 	/**
@@ -245,10 +220,10 @@ public abstract class Terminal implements Serializable {
 	@Override
 	public String toString() {
 		if (!_terminalFriends.isEmpty()) {
-			return String.join("|", _id, _owner.getKey(), _mode.toString(), String.format("%.0f", _payments),
+			return String.join("|", _id, _owner.getKey(), _mode.getName(), String.format("%.0f", _payments),
 					String.format("%.0f", _debt), String.join(",", _terminalFriends));
 		} else {
-			return String.join("|", _id, _owner.getKey(), _mode.toString(), String.format("%.0f", _payments),
+			return String.join("|", _id, _owner.getKey(), _mode.getName(), String.format("%.0f", _payments),
 					String.format("%.0f", _debt));
 		}
 
