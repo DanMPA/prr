@@ -21,10 +21,11 @@ import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
+import prr.core.exception.UnsupportedCommunicationExceptionDestination;
+import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 import prr.core.terminal.Terminal;
-import prr.core.terminal.TerminalMode;
-import prr.core.terminal.FancyTerminal;
 import prr.core.terminal.BasicTerminal;
+import prr.core.terminal.FancyTerminal;
 
 /**
  * Class Network that represents a amazing Network named prr a company by cats.
@@ -56,8 +57,7 @@ public class Network implements Serializable {
 			throws DuplicateEntityKeyException {
 		if (_clients.containsKey(key))
 			throw new DuplicateEntityKeyException(key);
-		_clients.put(key,
-				new Client(key, name, taxNumber,true));
+		_clients.put(key, new Client(key, name, taxNumber, true));
 	}
 
 	/**
@@ -84,20 +84,17 @@ public class Network implements Serializable {
 		return findClient(key).toString();
 	}
 
-	
-	public Collection<Client> showClients(Comparator<Client> comparatorOfClient) {
-		return _clients.values().stream()
-					.sorted(comparatorOfClient)
-					.toList();
+	public Collection<Client> showClients(
+			Comparator<Client> comparatorOfClient) {
+		return _clients.values().stream().sorted(comparatorOfClient).toList();
 	}
 
-	public Collection<Client> showClients(Comparator<Client> comparatorOfClient,Predicate<Client> clientFilter) {
-		return _clients.values().stream()
-				.filter(clientFilter)
-				.sorted(comparatorOfClient)
-				.toList();
+	public Collection<Client> showClients(Comparator<Client> comparatorOfClient,
+			Predicate<Client> clientFilter) {
+		return _clients.values().stream().filter(clientFilter)
+				.sorted(comparatorOfClient).toList();
 	}
-	
+
 	/**
 	 * Gets all the notifications of a specific Client.
 	 * 
@@ -203,57 +200,59 @@ public class Network implements Serializable {
 
 	}
 
-	public Collection<Terminal> showTerminals(Comparator<Terminal> coparatorOfTerminals) {
-		return _terminals.values().stream()
-				.sorted(coparatorOfTerminals)
+	public Collection<Terminal> showTerminals(
+			Comparator<Terminal> coparatorOfTerminals) {
+		return _terminals.values().stream().sorted(coparatorOfTerminals)
 				.toList();
 	}
 
-	public Collection<Terminal> showTerminals(Comparator<Terminal> coparatorOfTerminals,Predicate<Terminal> terminalFilter) {
-		return _terminals.values().stream()
-				.filter(terminalFilter)
-				.sorted(coparatorOfTerminals)
+	public Collection<Terminal> showTerminals(
+			Comparator<Terminal> coparatorOfTerminals,
+			Predicate<Terminal> terminalFilter) {
+		return _terminals.values().stream().filter(terminalFilter)
+				.sorted(coparatorOfTerminals).toList();
+	}
+
+	public Collection<Communication> showCommunications(
+			Comparator<Communication> compaterOfCommuncations) {
+		return _allCommunication.stream().sorted(compaterOfCommuncations)
 				.toList();
 	}
 
-	public Collection<Communication> showCommunications(Comparator<Communication> compaterOfCommuncations){
-		return _allCommunication.stream()
-				.sorted(compaterOfCommuncations)
-				.toList();
+	public Collection<Communication> showCommunications(
+			Predicate<Communication> communicationFilter,
+			Comparator<Communication> compaterOfCommuncations) {
+		return _allCommunication.stream().filter(communicationFilter)
+				.sorted(compaterOfCommuncations).toList();
 	}
 
-	public Collection<Communication> showCommunications(Predicate<Communication> communicationFilter, Comparator<Communication> compaterOfCommuncations){
-		return _allCommunication.stream()
-				.filter(communicationFilter)
-				.sorted(compaterOfCommuncations)
-				.toList();
+	public Collection<Communication> showCommunications(String clientKey,
+			Comparator<Communication> compaterOfCommuncations,
+			Function<Terminal, Stream<Communication>> terminalCommunications)
+			throws UnknownKeyException {
+		return findClient(clientKey).getCommunications(terminalCommunications)
+				.stream().sorted(compaterOfCommuncations).toList();
 	}
 
-	public Collection<Communication> showCommunications(String clientKey,Comparator<Communication> compaterOfCommuncations,Function<Terminal,Stream<Communication>> terminalCommunications) throws UnknownKeyException {
-		return findClient(clientKey).getCommunications(terminalCommunications).stream()
-				.sorted(compaterOfCommuncations)
-				.toList();
-	}
-
-	public void generateTextCommunication(Terminal origin,String destinationKey,String message) throws UnknownKeyException, UnavailableEntity{
+	public void generateTextCommunication(Terminal origin,
+			String destinationKey, String message)
+			throws UnknownKeyException, UnavailableEntity {
 		Terminal destination = findTerminal(destinationKey);
-		if(destination.canReciveTextCommunication()){
-			_allCommunication.add(origin.makeTextCommunication(destination, message));
-		} else{
+		if (destination.canReciveTextCommunication()) {
+			_allCommunication
+					.add(origin.makeTextCommunication(destination, message));
+		} else {
 			throw new UnavailableEntity(destinationKey);
 		}
 	}
 
-	public void generateInteractiveCommunication(Terminal origin,String destinationKey,String communcticationType)throws UnknownKeyException, UnavailableEntity{
+	public void generateInteractiveCommunication(Terminal origin,String destinationKey, String communcticationType) throws UnknownKeyException, UnavailableEntity, UnsupportedCommunicationExceptionOrigin, UnsupportedCommunicationExceptionDestination {
 		Terminal destination = findTerminal(destinationKey);
-		if (destination.getMode() != TerminalMode.BUSY || destination.getMode() != TerminalMode.SILENT){
-			if(communcticationType.equals("VOICE")){
-				_allCommunication.add(origin.makeVoiceCall(destination));
-			}
-			else if (communcticationType.equals("VIDEO")){
-				_allCommunication.add(origin.makeVideoCall(destination));
-			}
-		} else{
+		if (communcticationType.equals("VOICE") && destination.canReciveVoiceCommunication()) {
+			_allCommunication.add(origin.makeVoiceCommunication(destination));
+		} else if (communcticationType.equals("VIDEO") && destination.canReciveVideoCommunication()) {
+			_allCommunication.add(origin.makeVideoCommunication(destination));
+		} else {
 			throw new UnavailableEntity(destination.getMode());
 		}
 	}

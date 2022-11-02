@@ -14,13 +14,12 @@ public class VideoCommunication extends InteractiveCommunication {
 
 	@Override
 	public int getUnits() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _duration;
 	}
 
 	@Override
 	public double getPrice() {
-		return 0;
+		return getOrigen().getOwner().getClientLevel().getVideoCost(_duration);
 	}
 
 }

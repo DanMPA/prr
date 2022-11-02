@@ -11,6 +11,8 @@ import prr.core.exception.UnrecognizedEntryException;
 // import more exception core classes if needed
 import prr.core.terminal.Terminal;
 import prr.core.terminal.TerminalMode;
+import prr.core.terminal.TerminalModeOff;
+import prr.core.terminal.TerminalModeSilence;
 
 /* 
  * A concretização desta classe depende da funcionalidade suportada pelas entidades do core:
@@ -74,8 +76,8 @@ public class Parser {
     try {
       Terminal terminal = _network.registerTerminal(components[1], components[2], components[0]);
       switch(components[3]) {
-        case "SILENCE" -> terminal.changeTerminalMode(TerminalMode.SILENT);
-        case "OFF" -> terminal.changeTerminalMode(TerminalMode.OFF);
+        case "SILENCE" -> terminal.changeTerminalMode(new TerminalModeSilence());
+        case "OFF" -> terminal.changeTerminalMode(new TerminalModeOff());
         default -> {
          if (!components[3].equals("ON"))
            throw new UnrecognizedEntryException("Invalid specification in line: " + line);

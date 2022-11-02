@@ -2,7 +2,7 @@ package prr.app.terminal;
 
 import prr.core.Network;
 import prr.core.terminal.Terminal;
-import prr.core.terminal.TerminalMode;
+import prr.core.terminal.TerminalModeSilence;
 import pt.tecnico.uilib.menus.CommandException;
 
 /**
@@ -16,7 +16,7 @@ class DoSilenceTerminal extends TerminalCommand {
 
 	@Override
 	protected final void execute() throws CommandException {
-		if (!_receiver.changeTerminalMode(TerminalMode.SILENT)) {
+		if (!_receiver.changeTerminalMode(new TerminalModeSilence())) {
 			_display.popup(Message.alreadySilent());
 		}
 	}

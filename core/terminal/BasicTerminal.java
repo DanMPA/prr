@@ -1,12 +1,25 @@
 package prr.core.terminal;
 
 import prr.core.client.Client;
+import prr.core.communication.Communication;
+import prr.core.exception.UnsupportedCommunicationExceptionDestination;
+import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 
 
 public class BasicTerminal extends Terminal{
 
 	public BasicTerminal(String id, Client owner) {
 		super(id, owner);
+	}
+
+	@Override
+	public Communication makeVideoCommunication(Terminal destination) throws UnsupportedCommunicationExceptionOrigin {
+		throw new UnsupportedCommunicationExceptionOrigin("VIDEO");
+	}
+	
+	@Override
+	public boolean canReciveVideoCommunication()throws UnsupportedCommunicationExceptionDestination {
+		throw new UnsupportedCommunicationExceptionDestination("VIDEO"); 
 	}
 
 	/**

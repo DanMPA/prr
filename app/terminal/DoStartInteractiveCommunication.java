@@ -3,9 +3,10 @@ package prr.app.terminal;
 import prr.core.Network;
 import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
+import prr.core.exception.UnsupportedCommunicationExceptionDestination;
+import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 import prr.core.terminal.Terminal;
-import prr.core.terminal.TerminalMode;
-import java.util.Objects;
+
 import prr.app.exception.UnknownTerminalKeyException;
 import pt.tecnico.uilib.forms.Form;
 import pt.tecnico.uilib.menus.CommandException;
@@ -30,11 +31,15 @@ class DoStartInteractiveCommunication extends TerminalCommand {
 		} catch (UnknownKeyException e) {
 			throw new UnknownTerminalKeyException(destinationId);
 		} catch (UnavailableEntity e) {
-			if(e.getMode() == TerminalMode.SILENT){
+			if(e.getMode().toString() == "SILENT"){
 				Message.destinationIsSilent(destinationId);
-			} else if (e.getMode() == TerminalMode.BUSY){
+			} else if (e.getMode().toString() == "BUSY"){
 				Message.destinationIsBusy(destinationId);
 			}
+		} catch (UnsupportedCommunicationExceptionOrigin e) {
+			_display.popup(Message.unsupportedAtOrigin(_receiver.getId(), e.getMessage()));
+		} catch (UnsupportedCommunicationExceptionDestination e){
+			_display.popup(Message.unsupportedAtDestination(destinationId, e.getMessage()));
 		}
 
 	}

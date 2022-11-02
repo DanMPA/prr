@@ -15,14 +15,12 @@ public class VoiceCommunication extends InteractiveCommunication{
 
 	@Override
 	public int getUnits() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _duration;
 	}
 
 	@Override
 	public double getPrice() {
-		// TODO Auto-generated method stub
-		return 0;
+		return getOrigen().getOwner().getClientLevel().getVoiceCost(_duration);
 	}
 	
 }

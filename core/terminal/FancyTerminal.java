@@ -1,6 +1,9 @@
 package prr.core.terminal;
 
 import prr.core.client.Client;
+import prr.core.communication.Communication;
+import prr.core.communication.InteractiveCommunication;
+import prr.core.communication.VideoCommunication;
 
 public class FancyTerminal extends Terminal {
 	
@@ -8,6 +11,19 @@ public class FancyTerminal extends Terminal {
 		super(id, owner);
 	}
 
+	public Communication makeVideoCommunication(Terminal destination) {
+		InteractiveCommunication newCommunicaiton = new VideoCommunication(this, destination);
+		this.addCommunicationMade(newCommunicaiton);
+		this._currentInteractiveCommunication = newCommunicaiton;
+		this._mode = new TerminalModeBusy();
+		destination.addCommunicationMade(newCommunicaiton);
+		return newCommunicaiton;
+	}
+
+	public boolean canReciveVideoCommunication() {
+		return this._mode.canStartCommunication();
+	}
+	
 	/**
 	 * Converts Terminal Object to a String representation
 	 * @return String in the format
