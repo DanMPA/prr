@@ -34,6 +34,14 @@ public abstract class Communication implements Serializable {
 		return _id;
 	}
 
+	public Terminal getOrigen(){
+		return this._origen;
+	}
+
+	public Terminal getDestination(){
+		return this._destination;
+	}
+
 	@Override
 	public String toString() {
 		return String.join("|", getType(), String.valueOf(_id), _origen.getId(),

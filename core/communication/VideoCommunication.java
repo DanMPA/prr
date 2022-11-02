@@ -20,7 +20,6 @@ public class VideoCommunication extends InteractiveCommunication {
 
 	@Override
 	public double getPrice() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

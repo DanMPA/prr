@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import prr.core.client.Client;
-import prr.core.client.ClientLevel;
 import prr.core.communication.Communication;
 import prr.core.exception.DuplicateEntityKeyException;
 import prr.core.exception.KeyFormattingExemption;
@@ -23,6 +22,7 @@ import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 import prr.core.terminal.Terminal;
+import prr.core.terminal.TerminalMode;
 import prr.core.terminal.FancyTerminal;
 import prr.core.terminal.BasicTerminal;
 
@@ -57,7 +57,7 @@ public class Network implements Serializable {
 		if (_clients.containsKey(key))
 			throw new DuplicateEntityKeyException(key);
 		_clients.put(key,
-				new Client(key, name, taxNumber, ClientLevel.NORMAL, true));
+				new Client(key, name, taxNumber,true));
 	}
 
 	/**
@@ -91,7 +91,6 @@ public class Network implements Serializable {
 					.toList();
 	}
 
-	// Dont know if working at the moment still need to see if it sorts.
 	public Collection<Client> showClients(Comparator<Client> comparatorOfClient,Predicate<Client> clientFilter) {
 		return _clients.values().stream()
 				.filter(clientFilter)
@@ -204,14 +203,13 @@ public class Network implements Serializable {
 
 	}
 
-
 	public Collection<Terminal> showTerminals(Comparator<Terminal> coparatorOfTerminals) {
 		return _terminals.values().stream()
 				.sorted(coparatorOfTerminals)
 				.toList();
 	}
 
-	public Collection<Terminal> showTerminal(Comparator<Terminal> coparatorOfTerminals,Predicate<Terminal> terminalFilter) {
+	public Collection<Terminal> showTerminals(Comparator<Terminal> coparatorOfTerminals,Predicate<Terminal> terminalFilter) {
 		return _terminals.values().stream()
 				.filter(terminalFilter)
 				.sorted(coparatorOfTerminals)
@@ -232,32 +230,32 @@ public class Network implements Serializable {
 	}
 
 	public Collection<Communication> showCommunications(String clientKey,Comparator<Communication> compaterOfCommuncations,Function<Terminal,Stream<Communication>> terminalCommunications) throws UnknownKeyException {
-		return findClient(clientKey).getCommunications(terminalCommunications).stream().parallel()
+		return findClient(clientKey).getCommunications(terminalCommunications).stream()
 				.sorted(compaterOfCommuncations)
 				.toList();
 	}
 
 	public void generateTextCommunication(Terminal origin,String destinationKey,String message) throws UnknownKeyException, UnavailableEntity{
 		Terminal destination = findTerminal(destinationKey);
-		if(destination.canReciveCommunication()){
-			_allCommunication.add(origin.makeTexCommunication(destination, message));
+		if(destination.canReciveTextCommunication()){
+			_allCommunication.add(origin.makeTextCommunication(destination, message));
 		} else{
-			// FIXME Add notifications.
 			throw new UnavailableEntity(destinationKey);
 		}
 	}
 
 	public void generateInteractiveCommunication(Terminal origin,String destinationKey,String communcticationType)throws UnknownKeyException, UnavailableEntity{
 		Terminal destination = findTerminal(destinationKey);
-		if (destination.canReciveCommunication()){
+		if (destination.getMode() != TerminalMode.BUSY || destination.getMode() != TerminalMode.SILENT){
 			if(communcticationType.equals("VOICE")){
 				_allCommunication.add(origin.makeVoiceCall(destination));
 			}
 			else if (communcticationType.equals("VIDEO")){
 				_allCommunication.add(origin.makeVideoCall(destination));
 			}
+		} else{
+			throw new UnavailableEntity(destination.getMode());
 		}
-
 	}
 
 	/**

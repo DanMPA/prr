@@ -22,7 +22,7 @@ public class TextCommunication extends Communication {
 
 	@Override
 	public double getPrice() {
-		return 0;
+		return getOrigen().getOwner().getClientLevel().getTextCost(_message.length());
 	}
 
 	@Override

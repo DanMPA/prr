@@ -31,11 +31,11 @@ public class Client implements Serializable{
 	 * @param _level
 	 * @param _receiveNotification
 	 */
-	public Client(String key, String name, int taxNumber, ClientLevel level, boolean receiveNotification) {
+	public Client(String key, String name, int taxNumber,boolean receiveNotification) {
 		this._key = key;
 		this._name = name;
 		this._taxNumber = taxNumber;
-		this._level = level;
+		this._level = new ClientLevelNormal();
 		this._receiveNotification = receiveNotification;
 		this._associatedTerminals = new ArrayList<>();
 		this._terminalNotifications = new ArrayList<>();
@@ -101,6 +101,10 @@ public class Client implements Serializable{
 		_associatedTerminals.add(terminal);
 	}
 
+	public ClientLevel getClientLevel(){
+		return this._level;
+	}
+
 	/**
 	 * Gets the Clients ID.
 	 * 
@@ -164,6 +168,6 @@ public class Client implements Serializable{
 	 * @return Collection<String> Collection of Notification in string format.
 	 */
 	public Collection<String> getNotifications() {
-		return _receiveNotification ? _terminalNotifications.stream().map(Notification::toString).toList() : null;
+		return _terminalNotifications.stream().map(Notification::toString).toList();
 	}
 }

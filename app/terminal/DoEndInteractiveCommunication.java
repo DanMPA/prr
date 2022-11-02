@@ -12,7 +12,7 @@ import pt.tecnico.uilib.menus.CommandException;
 class DoEndInteractiveCommunication extends TerminalCommand {
 
   DoEndInteractiveCommunication(Network context, Terminal terminal) {
-    super(Label.END_INTERACTIVE_COMMUNICATION, context, terminal, receiver -> receiver.canEndCommunication());
+    super(Label.END_INTERACTIVE_COMMUNICATION, context, terminal, Terminal::canEndCommunication);
   }
   
   @Override

@@ -2,20 +2,11 @@ package prr.core.terminal;
 
 import prr.core.client.Client;
 
-public class BasicTerminal extends Terminal {
+
+public class BasicTerminal extends Terminal{
 
 	public BasicTerminal(String id, Client owner) {
 		super(id, owner);
-	}
-
-	public void makeVideoCall() {
-	}
-
-	/**
-	 * @return boolean
-	 */
-	boolean acceptVideoCall() {
-		return false;
 	}
 
 	/**
@@ -28,4 +19,5 @@ public class BasicTerminal extends Terminal {
 	public String toString() {
 		return String.join("|", "BASIC", super.toString());
 	}
+
 }

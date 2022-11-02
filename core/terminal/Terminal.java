@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
+import javax.management.Notification;
+
 import prr.core.client.Client;
 import prr.core.communication.Communication;
 import prr.core.communication.TextCommunication;
@@ -29,6 +31,7 @@ public abstract class Terminal implements Serializable {
 	private int _numberCommunications;
 	private List<Communication> _communicationsMade;
 	private List<Communication> _communicationsRecived;
+	private List<Notification> _notifications;
 
 	protected Terminal(String id, Client owner) {
 		this._id = id;
@@ -37,6 +40,7 @@ public abstract class Terminal implements Serializable {
 		this._terminalFriends = new TreeSet<>();
 		this._communicationsMade = new ArrayList<>();
 		this._communicationsRecived = new ArrayList<>();
+		this._notifications = new ArrayList<>();
 	}
 
 	/**
@@ -76,20 +80,27 @@ public abstract class Terminal implements Serializable {
 		_communicationsRecived.add(communication);
 	}
 
+	public void addNotification(Notification notification){
+		_notifications.add(notification);
+	}
+
 	/**
 	 * Gets number of Communications.
 	 * @return int
 	 */
 	public int numberCommunications() {
 		return _numberCommunications;
-	}
-
-
-	public Communication makeTexCommunication(Terminal destination, String message) {
+	}	
+	
+	public Communication makeTextCommunication(Terminal destination, String message) {
 		Communication newCommunicaiton = new TextCommunication(this,destination,message);
 		this.addCommunicationMade(newCommunicaiton);
 		destination.addCommunicationRecived(newCommunicaiton);
 		return newCommunicaiton;
+	}
+
+	public boolean canReciveTextCommunication() {
+		return this.getMode() != TerminalMode.OFF;
 	}
 
 	public Communication makeVoiceCall(Terminal destination) {
@@ -168,6 +179,9 @@ public abstract class Terminal implements Serializable {
 		return _id;
 	}
 
+	public Client getOwner(){
+		return this._owner;
+	}
 	public double getBalance(){
 		return _payments-_debt;
 	}
