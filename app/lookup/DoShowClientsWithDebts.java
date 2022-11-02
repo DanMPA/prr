@@ -12,12 +12,16 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClientsWithDebts extends Command<Network> {
 
-  DoShowClientsWithDebts(Network receiver) {
-    super(Label.SHOW_CLIENTS_WITH_DEBTS, receiver);
-  }
+	DoShowClientsWithDebts(Network receiver) {
+		super(Label.SHOW_CLIENTS_WITH_DEBTS, receiver);
+	}
 
-  @Override
-  protected final void execute() throws CommandException {
-	_display.popup(_receiver.showClients(Comparator.comparingDouble(Client::getDebts).thenComparing(Client::getKey),Client::hasDebt));
-  }
+	@Override
+	protected final void execute() throws CommandException {
+		_display.popup(
+				_receiver.showClients(
+						Comparator.comparingDouble(Client::getDebts).reversed()
+								.thenComparing(Client::getKey),
+						Client::hasDebt));
+	}
 }

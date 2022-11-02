@@ -19,6 +19,8 @@ class DoShowTerminalsWithPositiveBalance extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
-		_display.popup(_receiver.showTerminal(Comparator.comparing(Terminal::getId), terminal -> terminal.getBalance() >= 0));
+		_display.popup(
+				_receiver.showTerminals(Comparator.comparing(Terminal::getId),
+						terminal -> terminal.getBalance() >= 0));
 	}
 }
