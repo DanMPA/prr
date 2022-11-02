@@ -3,6 +3,7 @@ package prr.core.client;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -18,8 +19,8 @@ public class Client implements Serializable{
 	private int _taxNumber;
 	private ClientLevel _level;
 	private boolean _receiveNotification;
-	private Collection<Notification> _terminalNotifications;
-	private Collection<Terminal> _associatedTerminals;
+	private List<Notification> _terminalNotifications;
+	private List<Terminal> _associatedTerminals;
 	private double _payments;
 	private double _debts;
 
