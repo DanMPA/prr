@@ -24,6 +24,7 @@ import prr.core.exception.UnknownKeyException;
 import prr.core.exception.UnrecognizedEntryException;
 import prr.core.exception.UnsupportedCommunicationExceptionDestination;
 import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
+import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 import prr.core.terminal.BasicTerminal;
 import prr.core.terminal.FancyTerminal;
@@ -103,7 +104,7 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 * @throws UnknownKeyException if client don't exist in network.
 	 */
-	public Collection<String> showNotifications(String key)
+	public Collection<Notification> showNotifications(String key)
 			throws UnknownKeyException {
 		return findClient(key).getNotifications();
 	}
@@ -252,7 +253,7 @@ public class Network implements Serializable {
 			UnsupportedCommunicationExceptionOrigin,
 			UnsupportedCommunicationExceptionDestination {
 		Terminal destination = findTerminal(destinationKey);
-		
+
 		if (communcticationType.equals("VOICE")
 				&& destination.canReciveVoiceCommunication()) {
 			_allCommunication.add(origin.makeVoiceCommunication(destination));
@@ -285,7 +286,7 @@ public class Network implements Serializable {
 		}
 	}
 
-	public 
+	public
 
 	/**
 	 * Read text input file and create corresponding domain entities.

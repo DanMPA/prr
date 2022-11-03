@@ -11,7 +11,7 @@ import prr.core.communication.Communication;
 import prr.core.notification.Notification;
 import prr.core.terminal.Terminal;
 
-public class Client implements Serializable{
+public class Client implements Serializable {
 	private static final long serialVersionUID = 202208091753L;
 
 	private String _key;
@@ -19,20 +19,24 @@ public class Client implements Serializable{
 	private int _taxNumber;
 	private ClientLevel _level;
 	private boolean _receiveNotification;
+
 	private List<Notification> _terminalNotifications;
+
 	private List<Terminal> _associatedTerminals;
 	private double _payments;
 	private double _debts;
 
 	/***
 	 * Constrictor of a client object.
-	 * @param _key 
+	 * 
+	 * @param _key
 	 * @param _name
 	 * @param _taxNumber
 	 * @param _level
 	 * @param _receiveNotification
 	 */
-	public Client(String key, String name, int taxNumber,boolean receiveNotification) {
+	public Client(String key, String name, int taxNumber,
+			boolean receiveNotification) {
 		this._key = key;
 		this._name = name;
 		this._taxNumber = taxNumber;
@@ -50,9 +54,12 @@ public class Client implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return String.join("|", "CLIENT", _key, _name, String.valueOf(_taxNumber), _level.toString(),
-				(_receiveNotification ? "YES" : "NO"), String.valueOf(_associatedTerminals.size()),
-				String.format("%.0f", _payments), String.format("%.0f", _debts));
+		return String.join("|", "CLIENT", _key, _name,
+				String.valueOf(_taxNumber), _level.toString(),
+				(_receiveNotification ? "YES" : "NO"),
+				String.valueOf(_associatedTerminals.size()),
+				String.format("%.0f", _payments),
+				String.format("%.0f", _debts));
 	}
 
 	/**
@@ -69,8 +76,7 @@ public class Client implements Serializable{
 	}
 
 	/**
-	 * Verifies if two Client objects are the same.
-	 * If there id are the same.
+	 * Verifies if two Client objects are the same. If there id are the same.
 	 * 
 	 * @param obj
 	 * @return boolean true if the key of the clients is the same.
@@ -102,7 +108,7 @@ public class Client implements Serializable{
 		_associatedTerminals.add(terminal);
 	}
 
-	public ClientLevel getClientLevel(){
+	public ClientLevel getClientLevel() {
 		return this._level;
 	}
 
@@ -151,15 +157,16 @@ public class Client implements Serializable{
 		return _debts;
 	}
 
-	public boolean hasDebt(){
+	public boolean hasDebt() {
 		return _debts > 0;
 	}
 
-	public boolean hasNoDebt(){
+	public boolean hasNoDebt() {
 		return _debts == 0;
 	}
 
-	public Collection<Communication> getCommunications(Function<Terminal,Stream<Communication>> terminal){
+	public Collection<Communication> getCommunications(
+			Function<Terminal, Stream<Communication>> terminal) {
 		return _associatedTerminals.stream().flatMap(terminal).toList();
 	}
 
@@ -168,7 +175,11 @@ public class Client implements Serializable{
 	 * 
 	 * @return Collection<String> Collection of Notification in string format.
 	 */
-	public Collection<String> getNotifications() {
-		return _terminalNotifications.stream().map(Notification::toString).toList();
+	public Collection<Notification> getNotifications() {
+		return _terminalNotifications.stream().toList();
+	}
+
+	public void addNotifications(Notification notifications) {
+		this._terminalNotifications.add(notifications);
 	}
 }

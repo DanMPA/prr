@@ -20,6 +20,6 @@ class DoShowUnusedTerminals extends Command<Network> {
 	protected final void execute() throws CommandException {
 		_display.popup(_receiver.showTerminals(
 				Comparator.comparing(Terminal::getId),
-				communication -> communication.numberCommunications() == 0));
+				communication -> communication.getNumberCommunications() == 0));
 	}
 }
