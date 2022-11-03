@@ -35,7 +35,9 @@ public abstract class Terminal implements Serializable {
 	private List<Communication> _communicationsMade;
 	protected InteractiveCommunication _currentInteractiveCommunication;
 	private List<Communication> _communicationsRecived;
-	private Notification _notifications;
+	private Notification _notification;
+	private List<Notification> _allNotification;
+
 
 	protected Terminal(String id, Client owner) {
 		this._id = id;
@@ -45,6 +47,7 @@ public abstract class Terminal implements Serializable {
 		this._communicationsMade = new ArrayList<>();
 		this._communicationsRecived = new ArrayList<>();
 		this._previousMode = new TerminalModeIdle();
+		this._allNotification = new ArrayList<>();
 	}
 
 	/**
@@ -154,7 +157,7 @@ public abstract class Terminal implements Serializable {
 	public boolean canReciveVoiceCommunication() {
 		boolean canRecive = this._mode.canReciveCommunication();
 		if(!canRecive){
-			
+			_allNotification.add(_notification);
 		}
 		return canRecive;
 	}
@@ -274,16 +277,16 @@ public abstract class Terminal implements Serializable {
 			return false;
 		} else {
 			if (_mode.getName() == "OFF" && newMode.getName() == "IDLE") {
-				_notifications = new Notification(NotificationType.O2I);
+				_notification = new Notification(NotificationType.O2I);
 			} else if (_mode.getName() == "OFF"
 					&& newMode.getName() == "SILENCE") {
-				_notifications = new Notification(NotificationType.O2S);
+				_notification = new Notification(NotificationType.O2S);
 			} else if (_mode.getName() == "BUSY"
 					&& newMode.getName() == "IDLE") {
-				_notifications = new Notification(NotificationType.B2I);
+				_notification = new Notification(NotificationType.B2I);
 			} else if (_mode.getName() == "BUSY"
 					&& newMode.getName() == "SILENCE") {
-				_notifications = new Notification(NotificationType.B2S);
+				_notification = new Notification(NotificationType.B2S);
 			}
 			_mode = newMode;
 			return true;
