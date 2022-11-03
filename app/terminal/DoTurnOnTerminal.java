@@ -2,7 +2,7 @@ package prr.app.terminal;
 
 import prr.core.Network;
 import prr.core.terminal.Terminal;
-import prr.core.terminal.TerminalMode;
+import prr.core.terminal.TerminalModeIdle;
 import prr.core.terminal.TerminalModeOff;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -17,7 +17,7 @@ class DoTurnOnTerminal extends TerminalCommand {
 
 	@Override
 	protected final void execute() throws CommandException {
-		if (!_receiver.changeTerminalMode(new TerminalModeOff())) {
+		if (!_receiver.changeTerminalMode(new TerminalModeIdle())) {
 			_display.popup(Message.alreadyOff());
 		}
 	}

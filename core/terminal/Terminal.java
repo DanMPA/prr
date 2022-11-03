@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
@@ -11,6 +12,7 @@ import javax.management.Notification;
 
 import prr.core.client.Client;
 import prr.core.communication.Communication;
+import prr.core.communication.CommunicationStatus;
 import prr.core.communication.InteractiveCommunication;
 import prr.core.communication.TextCommunication;
 import prr.core.communication.VoiceCommunication;
@@ -27,7 +29,7 @@ public abstract class Terminal implements Serializable {
 	private double _debt;
 	private double _payments;
 	protected TerminalMode _mode;
-
+	protected TerminalMode _previousMode;
 	private Collection<String> _terminalFriends;
 	private Client _owner;
 	private int _numberCommunications;
@@ -44,14 +46,14 @@ public abstract class Terminal implements Serializable {
 		this._communicationsMade = new ArrayList<>();
 		this._communicationsRecived = new ArrayList<>();
 		this._notifications = new ArrayList<>();
+		this._previousMode = new TerminalModeIdle();
 	}
 
 	/**
 	 * Checks if this terminal can end the current interactive communication.
 	 *
 	 * @return true if this terminal is busy (i.e., it has an active interactive
-	 *         communication) and
-	 *         it was the originator of this communication.
+	 *         communication) and it was the originator of this communication.
 	 **/
 	public void addCommunicationMade(Communication communication) {
 		_communicationsMade.add(communication);
@@ -62,70 +64,91 @@ public abstract class Terminal implements Serializable {
 		_communicationsRecived.add(communication);
 	}
 
-	public void addNotification(Notification notification){
+	public void addNotification(Notification notification) {
 		_notifications.add(notification);
 	}
 
 	/**
 	 * Gets number of Communications.
+	 * 
 	 * @return int
 	 */
 	public int numberCommunications() {
 		return _numberCommunications;
-	}	
-	
-	public boolean canStartCommunication(){
+	}
+
+	public boolean canStartCommunication() {
 		return _mode.canStartCommunication();
 	}
 
-	public boolean canEndCommunication(){
-		return _mode.canEndCommunication();
+	public boolean canEndCommunication() {
+		return _mode.canEndCommunication() && _currentInteractiveCommunication != null && _currentInteractiveCommunication.getOrigen() == this;
 	}
-	public Communication makeTextCommunication(Terminal destination, String message) {
-		Communication newCommunicaiton = new TextCommunication(this,destination,message);
+
+	public Communication makeTextCommunication(Terminal destination,
+			String message) {
+		Communication newCommunicaiton = new TextCommunication(this,
+				destination, message);
 		this.addCommunicationMade(newCommunicaiton);
 		destination.addCommunicationRecived(newCommunicaiton);
+		_debt += newCommunicaiton.getCost();
 		return newCommunicaiton;
 	}
 
 	public boolean canReciveTextCommunication() {
-		return this._mode.canReciveCommunication();
+		return this._mode.getName() != "OFF";
 	}
 
 	public Communication makeVoiceCommunication(Terminal destination) {
-		InteractiveCommunication newCommunicaiton = new VoiceCommunication(this, destination);
+		InteractiveCommunication newCommunicaiton = new VoiceCommunication(this,
+				destination);
 		this.addCommunicationMade(newCommunicaiton);
 		this._currentInteractiveCommunication = newCommunicaiton;
+		this.setPreviousMode();
+		this.setMode(new TerminalModeBusy());
+		destination.setPreviousMode();
+		destination.setMode(new TerminalModeBusy());
 		destination.addCommunicationMade(newCommunicaiton);
 		return newCommunicaiton;
 	}
 
 	public boolean canReciveVoiceCommunication() {
-		return this._mode.canStartCommunication();
+		return this._mode.canReciveCommunication();
 	}
 
-	public abstract Communication makeVideoCommunication(Terminal destination) throws UnsupportedCommunicationExceptionOrigin;
-	public abstract boolean canReciveVideoCommunication() throws UnsupportedCommunicationExceptionDestination;
+	public abstract Communication makeVideoCommunication(Terminal destination)
+			throws UnsupportedCommunicationExceptionOrigin;
 
+	public abstract boolean canReciveVideoCommunication()
+			throws UnsupportedCommunicationExceptionDestination;
 
 	public double endOngoingCommunication(int duration) {
 		_currentInteractiveCommunication.setDuration(duration);
+		_currentInteractiveCommunication.setCommunicationStatus(CommunicationStatus.FINISHED);
 		double price = _currentInteractiveCommunication.getPrice();
-		_mode = new TerminalModeIdle();
+		this.setMode(this.getPreviousMode());
+		Terminal destination = _currentInteractiveCommunication.getDestination();
+		destination.setMode(destination.getPreviousMode());
+		_debt += price;
+		
 		_currentInteractiveCommunication = null;
 		return price;
 	}
 
 	/**
 	 * Adds a friend to a terminal.
+	 * 
 	 * @param friendTerminalKey
 	 */
 	public void addFriend(String friendTerminalKey) {
-		_terminalFriends.add(friendTerminalKey);
+		if (!Objects.equals(_id, friendTerminalKey)) {
+			_terminalFriends.add(friendTerminalKey);
+		}
 	}
 
 	/**
 	 * Removes a friend from a terminal.
+	 * 
 	 * @param friendTerminalKey
 	 */
 	public void removeFriend(String friendTerminalKey) {
@@ -134,6 +157,7 @@ public abstract class Terminal implements Serializable {
 
 	/**
 	 * Changes terminal's mode
+	 * 
 	 * @param newMode
 	 * @return boolean true when the newMode is different than the actual mode
 	 */
@@ -148,20 +172,24 @@ public abstract class Terminal implements Serializable {
 
 	/**
 	 * Gets terminal ID.
+	 * 
 	 * @return String
 	 */
 	public String getId() {
 		return _id;
 	}
 
-	public Client getOwner(){
+	public Client getOwner() {
 		return this._owner;
 	}
-	public double getBalance(){
-		return _payments-_debt;
+
+	public double getBalance() {
+		return _payments - _debt;
 	}
+
 	/**
 	 * Compute hashCode with reference to terminal's ID
+	 * 
 	 * @return int
 	 */
 	@Override
@@ -173,8 +201,7 @@ public abstract class Terminal implements Serializable {
 	}
 
 	/**
-	 * Verifies if two terminal objects are the same
-	 * If their IDs are the same
+	 * Verifies if two terminal objects are the same If their IDs are the same
 	 * 
 	 * @param obj
 	 * @return boolean
@@ -198,34 +225,73 @@ public abstract class Terminal implements Serializable {
 
 	/**
 	 * Gets Terminal's mode
+	 * 
 	 * @return TerminalMode
 	 */
 	public TerminalMode getMode() {
 		return _mode;
 	}
 
-	public Stream<Communication> getCommunicationsMadeStream(){
+	public Stream<Communication> getCommunicationsMadeStream() {
 		return _communicationsMade.stream();
 	}
-	public Stream<Communication> getCommunicationsRecivedStream(){
+
+	public Stream<Communication> getCommunicationsRecivedStream() {
 		return _communicationsRecived.stream();
 	}
-	
+
 	/**
 	 * Converts Terminal Object to a String representation
+	 * 
 	 * @return String in the format
-	 * 			terminalId|clientId|terminalStatus|balance-paid|balance-debts|friend1,...,friend
-	 *			terminalId|clientId|terminalStatus|balance-paid|balance-debts
+	 *         terminalId|clientId|terminalStatus|balance-paid|balance-debts|friend1,...,friend
+	 *         terminalId|clientId|terminalStatus|balance-paid|balance-debts
 	 */
 	@Override
 	public String toString() {
 		if (!_terminalFriends.isEmpty()) {
-			return String.join("|", _id, _owner.getKey(), _mode.getName(), String.format("%.0f", _payments),
-					String.format("%.0f", _debt), String.join(",", _terminalFriends));
+			return String.join("|", _id, _owner.getKey(), _mode.getName(),
+					String.format("%.0f", _payments),
+					String.format("%.0f", _debt),
+					String.join(",", _terminalFriends));
 		} else {
-			return String.join("|", _id, _owner.getKey(), _mode.getName(), String.format("%.0f", _payments),
+			return String.join("|", _id, _owner.getKey(), _mode.getName(),
+					String.format("%.0f", _payments),
 					String.format("%.0f", _debt));
 		}
 
+	}
+
+	public long getDebt() {
+		return Math.round(_debt);
+	}
+
+	public long getPayments() {
+		return Math.round(_payments);
+	}
+
+	public boolean validCommunication(int id) {
+		for (Communication aCommunication : _communicationsMade) {
+			if (aCommunication.getId() == id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void payDebt(double value) {
+		_payments += value;
+		_debt -= value;
+	}
+
+
+	public void setMode(TerminalMode mode) {
+		this._mode = mode;
+	}
+	public TerminalMode setPreviousMode() {
+		return _previousMode = _mode;
+	}
+	public TerminalMode getPreviousMode() {
+		return _previousMode;
 	}
 }

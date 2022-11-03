@@ -10,8 +10,8 @@ public class UnavailableEntity extends Exception{
 	public UnavailableEntity(TerminalMode mode) {
         _mode = mode;
     }
-	public TerminalMode getMode(){
-		return this._mode;
+	public String getMode(){
+		return this._mode.getName();
 	}
 
 }

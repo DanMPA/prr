@@ -8,6 +8,7 @@ public class TextCommunication extends Communication {
 	public TextCommunication(Terminal origen, Terminal destination,String message) {
 		super(origen, destination);
 		this._message = message;
+		this._cost = this.getPrice();
 	}
 
 	@Override

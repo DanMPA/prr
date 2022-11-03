@@ -8,7 +8,7 @@ public class ClientLevelGold extends ClientLevel{
 		} else if (50 <= textLength && textLength < 100) {
 			return 10;
 		} else {
-			return 2 * textLength;
+			return 2D * textLength;
 		}
 	}
 

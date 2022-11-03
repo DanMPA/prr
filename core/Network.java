@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import prr.core.client.Client;
 import prr.core.communication.Communication;
 import prr.core.exception.DuplicateEntityKeyException;
+import prr.core.exception.InvalidCommunicationExpextion;
 import prr.core.exception.KeyFormattingExemption;
 import prr.core.exception.UnavailableEntity;
 import prr.core.exception.UnknownKeyException;
@@ -86,13 +87,13 @@ public class Network implements Serializable {
 
 	public Collection<Client> showClients(
 			Comparator<Client> comparatorOfClient) {
-		return _clients.values().stream().sorted(comparatorOfClient).toList();
+		return ShowEntities.showAll(_clients.values(), comparatorOfClient);
 	}
 
 	public Collection<Client> showClients(Comparator<Client> comparatorOfClient,
 			Predicate<Client> clientFilter) {
-		return _clients.values().stream().filter(clientFilter)
-				.sorted(comparatorOfClient).toList();
+		return ShowEntities.showFiltered(_clients.values(), clientFilter,
+				comparatorOfClient);
 	}
 
 	/**
@@ -201,29 +202,28 @@ public class Network implements Serializable {
 	}
 
 	public Collection<Terminal> showTerminals(
-			Comparator<Terminal> coparatorOfTerminals) {
-		return _terminals.values().stream().sorted(coparatorOfTerminals)
-				.toList();
+			Comparator<Terminal> comparatorOfTerminals) {
+		return ShowEntities.showAll(_terminals.values(), comparatorOfTerminals);
 	}
 
 	public Collection<Terminal> showTerminals(
 			Comparator<Terminal> coparatorOfTerminals,
 			Predicate<Terminal> terminalFilter) {
-		return _terminals.values().stream().filter(terminalFilter)
-				.sorted(coparatorOfTerminals).toList();
+		return ShowEntities.showFiltered(_terminals.values(), terminalFilter,
+				coparatorOfTerminals);
 	}
 
 	public Collection<Communication> showCommunications(
 			Comparator<Communication> compaterOfCommuncations) {
-		return _allCommunication.stream().sorted(compaterOfCommuncations)
-				.toList();
+		return ShowEntities.showAll(_allCommunication, compaterOfCommuncations);
 	}
 
 	public Collection<Communication> showCommunications(
 			Predicate<Communication> communicationFilter,
 			Comparator<Communication> compaterOfCommuncations) {
-		return _allCommunication.stream().filter(communicationFilter)
-				.sorted(compaterOfCommuncations).toList();
+		return ShowEntities.showFiltered(_allCommunication, communicationFilter,
+				compaterOfCommuncations);
+
 	}
 
 	public Collection<Communication> showCommunications(String clientKey,
@@ -242,20 +242,50 @@ public class Network implements Serializable {
 			_allCommunication
 					.add(origin.makeTextCommunication(destination, message));
 		} else {
-			throw new UnavailableEntity(destinationKey);
+			throw new UnavailableEntity(destination.getMode());
 		}
 	}
 
-	public void generateInteractiveCommunication(Terminal origin,String destinationKey, String communcticationType) throws UnknownKeyException, UnavailableEntity, UnsupportedCommunicationExceptionOrigin, UnsupportedCommunicationExceptionDestination {
+	public void generateInteractiveCommunication(Terminal origin,
+			String destinationKey, String communcticationType)
+			throws UnknownKeyException, UnavailableEntity,
+			UnsupportedCommunicationExceptionOrigin,
+			UnsupportedCommunicationExceptionDestination {
 		Terminal destination = findTerminal(destinationKey);
-		if (communcticationType.equals("VOICE") && destination.canReciveVoiceCommunication()) {
+		
+		if (communcticationType.equals("VOICE")
+				&& destination.canReciveVoiceCommunication()) {
 			_allCommunication.add(origin.makeVoiceCommunication(destination));
-		} else if (communcticationType.equals("VIDEO") && destination.canReciveVideoCommunication()) {
+		} else if (communcticationType.equals("VIDEO")
+				&& destination.canReciveVideoCommunication()) {
 			_allCommunication.add(origin.makeVideoCommunication(destination));
 		} else {
 			throw new UnavailableEntity(destination.getMode());
 		}
 	}
+
+	public Communication findCommunication(int id)
+			throws InvalidCommunicationExpextion {
+		for (Communication aCommunication : _allCommunication) {
+			if (aCommunication.getId() == id) {
+				return aCommunication;
+			}
+		}
+		throw new InvalidCommunicationExpextion(String.valueOf(id));
+	}
+
+	public boolean validCommunication(Terminal terminal, int id) {
+		return terminal.validCommunication(id);
+	}
+
+	public void payCommunication(Terminal terminal, int id)
+			throws InvalidCommunicationExpextion {
+		if (validCommunication(terminal, id)) {
+			terminal.payDebt(findCommunication(id).paidCommunication());
+		}
+	}
+
+	public 
 
 	/**
 	 * Read text input file and create corresponding domain entities.

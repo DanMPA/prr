@@ -6,6 +6,7 @@ public class VoiceCommunication extends InteractiveCommunication{
 
 	public VoiceCommunication(Terminal origen,Terminal destination) {
 		super(origen, destination);
+		
 	}
 
 	@Override

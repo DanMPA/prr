@@ -6,10 +6,8 @@ import prr.core.exception.UnavailableFileException;
 import java.io.IOException;
 
 import prr.app.exception.FileOpenFailedException;
-import pt.tecnico.uilib.forms.Form;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-//Add more imports if needed
 
 /**
  * Command to open a file.

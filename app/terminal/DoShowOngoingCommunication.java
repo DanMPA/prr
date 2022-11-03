@@ -1,9 +1,11 @@
 package prr.app.terminal;
 
+import java.util.Collection;
 import java.util.Comparator;
 
 import prr.core.Network;
 import prr.core.communication.Communication;
+import prr.core.communication.CommunicationStatus;
 import prr.core.terminal.Terminal;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -18,6 +20,14 @@ class DoShowOngoingCommunication extends TerminalCommand {
 
 	@Override
 	protected final void execute() throws CommandException {
-		_display.popup(_network.showCommunications(Communication::isCommunicationOngoing, Comparator.comparing(Communication::getId)));
+		Collection<Communication> tempCommunications = _network.showCommunications(
+			Communication -> Communication
+					.getSatus() == CommunicationStatus.ONGOING && Communication.getOrigen() == _receiver,
+			Comparator.comparing(Communication::getId));
+			if(tempCommunications.isEmpty()){
+				_display.popup(Message.noOngoingCommunication());
+			} else {
+				_display.popup(tempCommunications);
+			}
 	}
 }

@@ -7,8 +7,8 @@ import prr.core.exception.UnsupportedCommunicationExceptionDestination;
 import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 import prr.core.terminal.Terminal;
 
+
 import prr.app.exception.UnknownTerminalKeyException;
-import pt.tecnico.uilib.forms.Form;
 import pt.tecnico.uilib.menus.CommandException;
 
 /**
@@ -20,6 +20,7 @@ class DoStartInteractiveCommunication extends TerminalCommand {
 		super(Label.START_INTERACTIVE_COMMUNICATION, context, terminal,
 				Terminal::canStartCommunication);
 		addStringField("destinationId", Message.terminalKey());
+		addOptionField("type", Message.commType(), "VOICE","VIDEO");
 	}
 
 	@Override
@@ -27,14 +28,14 @@ class DoStartInteractiveCommunication extends TerminalCommand {
 		String destinationId = stringField("destinationId");
 		try {
 			_network.generateInteractiveCommunication(_receiver, destinationId,
-					Form.requestString(Message.commType()));
+					optionField("type"));
 		} catch (UnknownKeyException e) {
 			throw new UnknownTerminalKeyException(destinationId);
 		} catch (UnavailableEntity e) {
-			if(e.getMode().toString() == "SILENT"){
-				Message.destinationIsSilent(destinationId);
-			} else if (e.getMode().toString() == "BUSY"){
-				Message.destinationIsBusy(destinationId);
+			switch (e.getMode()){
+				case "SILENCE" -> _display.popup(Message.destinationIsSilent(destinationId));
+				case "BUSY" ->_display.popup(Message.destinationIsBusy(destinationId));
+				case "OFF" -> _display.popup(Message.destinationIsOff(destinationId));
 			}
 		} catch (UnsupportedCommunicationExceptionOrigin e) {
 			_display.popup(Message.unsupportedAtOrigin(_receiver.getId(), e.getMessage()));
