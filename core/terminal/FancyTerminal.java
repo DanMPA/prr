@@ -11,6 +11,23 @@ public class FancyTerminal extends Terminal {
 		super(id, owner);
 	}
 
+	/**
+	 * If the mode is not null and the mode can receive video communication,
+	 * then return true.
+	 * 
+	 * @return boolean
+	 */
+	public boolean canReciveVideoCommunication() {
+		return this._mode.canReciveCommunication();
+	}
+
+	/**
+	 * This function creates a new Video Communication , sets the current mode
+	 * of the terminal to busy, and returns the a new VideoCommunication object.
+	 * 
+	 * @param destination The terminal that the communication is being made to.
+	 * @return A new VideoCommunication object.
+	 */
 	public Communication makeVideoCommunication(Terminal destination) {
 		InteractiveCommunication newCommunicaiton = new VideoCommunication(this,
 				destination);
@@ -22,10 +39,6 @@ public class FancyTerminal extends Terminal {
 		destination.setMode(new TerminalModeBusy());
 		destination.addCommunicationMade(newCommunicaiton);
 		return newCommunicaiton;
-	}
-
-	public boolean canReciveVideoCommunication() {
-		return this._mode.canReciveCommunication();
 	}
 
 	/**
