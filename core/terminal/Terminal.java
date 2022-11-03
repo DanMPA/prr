@@ -147,22 +147,23 @@ public abstract class Terminal implements Serializable {
 	}
 
 	/**
-	 * Removes a friend from a terminal.
+	 * Remove a friend from the list of friends.
 	 * 
-	 * @param friendTerminalKey
+	 * @param friendTerminalKey The terminal key of the friend to remove.
 	 */
 	public void removeFriend(String friendTerminalKey) {
 		_terminalFriends.remove(friendTerminalKey);
 	}
 
 	/**
-	 * Changes terminal's mode
+	 * If the new mode is the same as the current mode, return false; otherwise, set
+	 * the current mode to the new mode and return true
 	 * 
-	 * @param newMode
-	 * @return boolean true when the newMode is different than the actual mode
+	 * @param newMode The new mode to change to.
+	 * @return A boolean value.
 	 */
 	public boolean changeTerminalMode(TerminalMode newMode) {
-		if (_mode.equals(newMode)) {
+		if (Objects.equals(_mode.getName(), newMode.getName())) {
 			return false;
 		} else {
 			_mode = newMode;
