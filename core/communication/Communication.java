@@ -15,7 +15,6 @@ public abstract class Communication implements Serializable {
 	private Terminal _origen;
 	private Terminal _destination;
 
-
 	private CommunicationStatus _communicationStatus;
 
 	protected Communication(Terminal origen, Terminal destination) {
@@ -32,25 +31,6 @@ public abstract class Communication implements Serializable {
 
 	public abstract CommunicationStatus getSatus();
 
-	public int getId() {
-		return _id;
-	}
-
-	public Terminal getOrigen(){
-		return this._origen;
-	}
-
-	public Terminal getDestination(){
-		return this._destination;
-	}
-
-	@Override
-	public String toString() {
-		return String.join("|", getType(), String.valueOf(_id), _origen.getId(),
-				_destination.getId(), String.valueOf(getUnits()),
-				String.valueOf(Math.round(getPrice())), String.valueOf(getSatus()));
-	}
-
 	public CommunicationStatus getCommunicationStatus() {
 		return _communicationStatus;
 	}
@@ -59,21 +39,40 @@ public abstract class Communication implements Serializable {
 		return _communicationStatus == CommunicationStatus.ONGOING;
 	}
 
-	public void setPaid(){
+	public int getId() {
+		return _id;
+	}
+
+	public Terminal getOrigen() {
+		return this._origen;
+	}
+
+	public Terminal getDestination() {
+		return this._destination;
+	}
+
+	public void setPaid() {
 		_isPaid = true;
 	}
 
-	public double getCost(){
+	public double getCost() {
 		return _cost;
 	}
 
-
-	public void setCost(double cost){
+	public void setCost(double cost) {
 		_cost = cost;
 	}
 
-	public double paidCommunication(){
+	public double paidCommunication() {
 		setPaid();
 		return getCost();
+	}
+
+	@Override
+	public String toString() {
+		return String.join("|", getType(), String.valueOf(_id), _origen.getId(),
+				_destination.getId(), String.valueOf(getUnits()),
+				String.valueOf(Math.round(getPrice())),
+				String.valueOf(getSatus()));
 	}
 }
