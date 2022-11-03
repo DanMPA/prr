@@ -2,8 +2,9 @@ package prr.core.terminal;
 
 import java.io.Serializable;
 
-public class TerminalModeBusy implements TerminalMode,Serializable{
+public class TerminalModeBusy implements TerminalMode, Serializable {
 	private static final long serialVersionUID = 202208091753L;
+
 	@Override
 	public boolean canStartCommunication() {
 		return false;
@@ -23,6 +24,5 @@ public class TerminalModeBusy implements TerminalMode,Serializable{
 	public String getName() {
 		return "BUSY";
 	}
-	
-	
+
 }

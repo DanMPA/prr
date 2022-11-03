@@ -2,7 +2,7 @@ package prr.core.terminal;
 
 import java.io.Serializable;
 
-public class TerminalModeOff implements TerminalMode,Serializable {
+public class TerminalModeOff implements TerminalMode, Serializable {
 	private static final long serialVersionUID = 202208091753L;
 
 	@Override
@@ -24,5 +24,5 @@ public class TerminalModeOff implements TerminalMode,Serializable {
 	public String getName() {
 		return "OFF";
 	}
-	
+
 }

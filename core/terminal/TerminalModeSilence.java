@@ -2,9 +2,9 @@ package prr.core.terminal;
 
 import java.io.Serializable;
 
-public class TerminalModeSilence implements TerminalMode,Serializable{
+public class TerminalModeSilence implements TerminalMode, Serializable {
 	private static final long serialVersionUID = 202208091753L;
-	
+
 	@Override
 	public boolean canStartCommunication() {
 		return true;
@@ -24,5 +24,5 @@ public class TerminalModeSilence implements TerminalMode,Serializable{
 	public String getName() {
 		return "SILENCE";
 	}
-	
+
 }
