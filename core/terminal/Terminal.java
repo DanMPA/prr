@@ -148,6 +148,7 @@ public abstract class Terminal implements Serializable {
 				destination, message);
 		this.addCommunicationMade(newCommunicaiton);
 		destination.addCommunicationRecived(newCommunicaiton);
+		newCommunicaiton.setCost(newCommunicaiton.getPrice(findFriend(destination.getId())));
 		_debt += newCommunicaiton.getCost();
 		return newCommunicaiton;
 	}
@@ -216,10 +217,12 @@ public abstract class Terminal implements Serializable {
 		_currentInteractiveCommunication.setDuration(duration);
 		_currentInteractiveCommunication
 				.setCommunicationStatus(CommunicationStatus.FINISHED);
-		double price = _currentInteractiveCommunication.getPrice();
 		this.setMode(this.getPreviousMode());
 		Terminal destination = _currentInteractiveCommunication
 				.getDestination();
+		double price = _currentInteractiveCommunication
+				.getPrice(findFriend(destination.getId()));
+		_currentInteractiveCommunication.setCost(price);
 		destination.setMode(destination.getPreviousMode());
 		_debt += price;
 
@@ -237,6 +240,21 @@ public abstract class Terminal implements Serializable {
 		if (!Objects.equals(_id, friendTerminalKey)) {
 			_terminalFriends.add(friendTerminalKey);
 		}
+	}
+
+	/**
+	 * This function returns true if the terminal has this friend
+	 * 
+	 * @param friendTerminalKey The terminal key of the friend you want to find.
+	 * @return A boolean value.
+	 */
+	public boolean findFriend(String friendTerminalKey) {
+		for (String friend : _terminalFriends) {
+			if (friend.equals(friendTerminalKey)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

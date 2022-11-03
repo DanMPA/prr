@@ -3,7 +3,7 @@ package prr.core.communication;
 import prr.core.terminal.Terminal;
 
 public class VideoCommunication extends InteractiveCommunication {
-	public VideoCommunication(Terminal origen,Terminal destination) {
+	public VideoCommunication(Terminal origen, Terminal destination) {
 		super(origen, destination);
 	}
 
@@ -18,8 +18,13 @@ public class VideoCommunication extends InteractiveCommunication {
 	}
 
 	@Override
-	public double getPrice() {
+	public double getPrice(boolean isFriends) {
+		if (isFriends) {
+			return (getOrigen().getOwner().getClientLevel()
+					.getVideoCost(_duration)) / 2;
+		}
 		return getOrigen().getOwner().getClientLevel().getVideoCost(_duration);
+
 	}
 
 }

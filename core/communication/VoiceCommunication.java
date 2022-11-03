@@ -20,8 +20,13 @@ public class VoiceCommunication extends InteractiveCommunication{
 	}
 
 	@Override
-	public double getPrice() {
+	public double getPrice(boolean isFriends) {
+		if (isFriends) {
+			return (getOrigen().getOwner().getClientLevel()
+					.getVideoCost(_duration)) / 2;
+		}
 		return getOrigen().getOwner().getClientLevel().getVoiceCost(_duration);
+
 	}
 	
 }

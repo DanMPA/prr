@@ -4,11 +4,11 @@ import prr.core.terminal.Terminal;
 
 public class TextCommunication extends Communication {
 	private String _message;
-	
-	public TextCommunication(Terminal origen, Terminal destination,String message) {
+
+	public TextCommunication(Terminal origen, Terminal destination,
+			String message) {
 		super(origen, destination);
 		this._message = message;
-		this._cost = this.getPrice();
 	}
 
 	@Override
@@ -22,8 +22,14 @@ public class TextCommunication extends Communication {
 	}
 
 	@Override
-	public double getPrice() {
-		return getOrigen().getOwner().getClientLevel().getTextCost(_message.length());
+	public double getPrice(boolean isFriends) {
+		if (isFriends) {
+			return (getOrigen().getOwner().getClientLevel()
+					.getTextCost(_message.length())) / 2;
+		}
+		return getOrigen().getOwner().getClientLevel()
+				.getTextCost(_message.length());
+
 	}
 
 	@Override

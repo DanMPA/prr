@@ -27,7 +27,7 @@ public abstract class Communication implements Serializable {
 
 	public abstract int getUnits();
 
-	public abstract double getPrice();
+	public abstract double getPrice(boolean isFriends);
 
 	public abstract CommunicationStatus getSatus();
 
@@ -72,7 +72,7 @@ public abstract class Communication implements Serializable {
 	public String toString() {
 		return String.join("|", getType(), String.valueOf(_id), _origen.getId(),
 				_destination.getId(), String.valueOf(getUnits()),
-				String.valueOf(Math.round(getPrice())),
+				String.valueOf(Math.round(getCost())),
 				String.valueOf(getSatus()));
 	}
 }
