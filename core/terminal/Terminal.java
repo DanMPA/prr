@@ -17,6 +17,7 @@ import prr.core.communication.VoiceCommunication;
 import prr.core.exception.UnsupportedCommunicationExceptionDestination;
 import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 import prr.core.notification.Notification;
+import prr.core.notification.NotificationType;
 
 /**
  * Abstract terminal.
@@ -34,7 +35,7 @@ public abstract class Terminal implements Serializable {
 	private List<Communication> _communicationsMade;
 	protected InteractiveCommunication _currentInteractiveCommunication;
 	private List<Communication> _communicationsRecived;
-	private List<Notification> _notifications;
+	private Notification _notifications;
 
 	protected Terminal(String id, Client owner) {
 		this._id = id;
@@ -43,17 +44,7 @@ public abstract class Terminal implements Serializable {
 		this._terminalFriends = new TreeSet<>();
 		this._communicationsMade = new ArrayList<>();
 		this._communicationsRecived = new ArrayList<>();
-		this._notifications = new ArrayList<>();
 		this._previousMode = new TerminalModeIdle();
-	}
-
-	/**
-	 * Add a notification to the list of notifications.
-	 * 
-	 * @param notification The notification to add to the list of notifications.
-	 */
-	public void addNotification(Notification notification) {
-		_notifications.add(notification);
 	}
 
 	/**
@@ -148,7 +139,8 @@ public abstract class Terminal implements Serializable {
 				destination, message);
 		this.addCommunicationMade(newCommunicaiton);
 		destination.addCommunicationRecived(newCommunicaiton);
-		newCommunicaiton.setCost(newCommunicaiton.getPrice(findFriend(destination.getId())));
+		newCommunicaiton.setCost(
+				newCommunicaiton.getPrice(findFriend(destination.getId())));
 		_debt += newCommunicaiton.getCost();
 		return newCommunicaiton;
 	}
@@ -160,7 +152,11 @@ public abstract class Terminal implements Serializable {
 	 * @return A boolean value.
 	 */
 	public boolean canReciveVoiceCommunication() {
-		return this._mode.canReciveCommunication();
+		boolean canRecive = this._mode.canReciveCommunication();
+		if(!canRecive){
+			
+		}
+		return canRecive;
 	}
 
 	/**
@@ -277,6 +273,18 @@ public abstract class Terminal implements Serializable {
 		if (Objects.equals(_mode.getName(), newMode.getName())) {
 			return false;
 		} else {
+			if (_mode.getName() == "OFF" && newMode.getName() == "IDLE") {
+				_notifications = new Notification(NotificationType.O2I);
+			} else if (_mode.getName() == "OFF"
+					&& newMode.getName() == "SILENCE") {
+				_notifications = new Notification(NotificationType.O2S);
+			} else if (_mode.getName() == "BUSY"
+					&& newMode.getName() == "IDLE") {
+				_notifications = new Notification(NotificationType.B2I);
+			} else if (_mode.getName() == "BUSY"
+					&& newMode.getName() == "SILENCE") {
+				_notifications = new Notification(NotificationType.B2S);
+			}
 			_mode = newMode;
 			return true;
 		}
@@ -405,8 +413,8 @@ public abstract class Terminal implements Serializable {
 		if (!_terminalFriends.isEmpty()) {
 			return String.join("|", _id, _owner.getKey(), _mode.getName(),
 					String.valueOf(Math.round(_payments)),
-					String.valueOf(Math.round(_debt)),
-					String.join(",", _terminalFriends.stream().sorted().toList()));
+					String.valueOf(Math.round(_debt)), String.join(",",
+							_terminalFriends.stream().sorted().toList()));
 		} else {
 			return String.join("|", _id, _owner.getKey(), _mode.getName(),
 					String.valueOf(Math.round(_payments)),
