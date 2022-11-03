@@ -1,6 +1,6 @@
 package prr.core.client;
 
-public class ClientLevelGold extends ClientLevel{
+public class ClientLevelGold extends ClientLevel {
 	@Override
 	public double getTextCost(int textLength) {
 		if (textLength < 50) {

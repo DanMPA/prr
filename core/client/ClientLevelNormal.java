@@ -1,9 +1,8 @@
 package prr.core.client;
 
-public class ClientLevelNormal extends ClientLevel{
+public class ClientLevelNormal extends ClientLevel {
 
 	private static final long serialVersionUID = 202208091753L;
-
 
 	@Override
 	public double getTextCost(int textLength) {
