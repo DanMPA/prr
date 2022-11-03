@@ -406,7 +406,7 @@ public abstract class Terminal implements Serializable {
 			return String.join("|", _id, _owner.getKey(), _mode.getName(),
 					String.valueOf(Math.round(_payments)),
 					String.valueOf(Math.round(_debt)),
-					String.join(",", _terminalFriends));
+					String.join(",", _terminalFriends.stream().sorted().toList()));
 		} else {
 			return String.join("|", _id, _owner.getKey(), _mode.getName(),
 					String.valueOf(Math.round(_payments)),
