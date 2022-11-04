@@ -15,24 +15,23 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClient extends Command<Network> {
 
-  private final String _clientId = "ClientID";
+	private final String _clientId = "ClientID";
 
-  DoShowClient(Network receiver) {
-    super(Label.SHOW_CLIENT, receiver);
-    addStringField(_clientId, Message.key());
-  }
-  
-  @Override
-  protected final void execute() throws CommandException {
-    try{
-      String clientId = stringField(_clientId);
-      String client = _receiver.showClient(clientId);
-      _display.add(client);
-      _display.addAll(_receiver.showNotifications(clientId));
-      _display.display();
-      
-    } catch(UnknownKeyException ex){
-     throw new UnknownClientKeyException(stringField(_clientId)); 
-    }
-  }
+	DoShowClient(Network receiver) {
+		super(Label.SHOW_CLIENT, receiver);
+		addStringField(_clientId, Message.key());
+	}
+
+	@Override
+	protected final void execute() throws CommandException {
+		try {
+			String clientId = stringField(_clientId);
+			String client = _receiver.showClient(clientId);
+			_display.popup(client);
+			_display.popup(_receiver.showNotifications(clientId));
+
+		} catch (UnknownKeyException ex) {
+			throw new UnknownClientKeyException(stringField(_clientId));
+		}
+	}
 }

@@ -17,8 +17,12 @@ public class FancyTerminal extends Terminal {
 	 * 
 	 * @return boolean
 	 */
-	public boolean canReciveVideoCommunication() {
-		return this._mode.canReciveCommunication();
+	public boolean canReciveVideoCommunication(Terminal origin) {
+		boolean canReceive = this._mode.canReciveCommunication();
+		if(!canReceive){
+			this._clientsToBeNotified.add(origin.getOwner());
+		}
+		return canReceive;
 	}
 
 	/**

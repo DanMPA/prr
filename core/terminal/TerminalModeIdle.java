@@ -21,8 +21,7 @@ public class TerminalModeIdle implements TerminalMode, Serializable {
 	}
 
 	@Override
-	public String getName() {
+	public String toString() {
 		return "IDLE";
 	}
-
 }

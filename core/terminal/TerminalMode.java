@@ -4,5 +4,5 @@ public interface TerminalMode{
 	abstract boolean canStartCommunication();
 	abstract boolean canReciveCommunication();
 	abstract boolean canEndCommunication();
-	abstract String getName();
+	abstract String toString();
 }

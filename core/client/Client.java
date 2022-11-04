@@ -3,7 +3,9 @@ package prr.core.client;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -20,7 +22,7 @@ public class Client implements Serializable {
 	private ClientLevel _level;
 	private boolean _receiveNotification;
 
-	private List<Notification> _terminalNotifications;
+	private Set<Notification> _terminalNotifications;
 
 	private List<Terminal> _associatedTerminals;
 	private double _payments;
@@ -43,7 +45,7 @@ public class Client implements Serializable {
 		this._level = new ClientLevelNormal();
 		this._receiveNotification = receiveNotification;
 		this._associatedTerminals = new ArrayList<>();
-		this._terminalNotifications = new ArrayList<>();
+		this._terminalNotifications = new HashSet<>();
 	}
 
 	/**
@@ -179,7 +181,13 @@ public class Client implements Serializable {
 		return _terminalNotifications.stream().toList();
 	}
 
-	public void addNotifications(Notification notifications) {
-		this._terminalNotifications.add(notifications);
+	public void removeNotifications() {
+		_terminalNotifications.clear();
+	}
+
+	public void addNotifications(Notification notification) {
+		if(notification != null){
+			this._terminalNotifications.add(notification);
+		}
 	}
 }

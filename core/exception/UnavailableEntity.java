@@ -11,7 +11,7 @@ public class UnavailableEntity extends Exception{
         _mode = mode;
     }
 	public String getMode(){
-		return this._mode.getName();
+		return this._mode.toString();
 	}
 
 }

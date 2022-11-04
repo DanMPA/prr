@@ -21,8 +21,9 @@ public class TerminalModeBusy implements TerminalMode, Serializable {
 	}
 
 	@Override
-	public String getName() {
+	public String toString() {
 		return "BUSY";
 	}
+
 
 }

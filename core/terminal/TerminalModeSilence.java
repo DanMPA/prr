@@ -21,7 +21,7 @@ public class TerminalModeSilence implements TerminalMode, Serializable {
 	}
 
 	@Override
-	public String getName() {
+	public String toString() {
 		return "SILENCE";
 	}
 

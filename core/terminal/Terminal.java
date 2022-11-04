@@ -28,7 +28,7 @@ public abstract class Terminal implements Serializable {
 	private String _id;
 	private double _debt;
 	private double _payments;
-	private Client _owner;
+	protected Client _owner;
 	protected TerminalMode _mode;
 	protected TerminalMode _previousMode;
 	private Collection<String> _terminalFriends;
@@ -36,7 +36,7 @@ public abstract class Terminal implements Serializable {
 	protected InteractiveCommunication _currentInteractiveCommunication;
 	private List<Communication> _communicationsRecived;
 	private Notification _notification;
-	private List<Notification> _allNotification;
+	protected List<Client> _clientsToBeNotified;
 
 
 	protected Terminal(String id, Client owner) {
@@ -47,7 +47,7 @@ public abstract class Terminal implements Serializable {
 		this._communicationsMade = new ArrayList<>();
 		this._communicationsRecived = new ArrayList<>();
 		this._previousMode = new TerminalModeIdle();
-		this._allNotification = new ArrayList<>();
+		this._clientsToBeNotified = new ArrayList<>();
 	}
 
 	/**
@@ -122,8 +122,12 @@ public abstract class Terminal implements Serializable {
 	 * 
 	 * @return A boolean value.
 	 */
-	public boolean canReciveTextCommunication() {
-		return !this._mode.getName().equals("OFF");
+	public boolean canReciveTextCommunication(Terminal origin) {
+		boolean canReceive = !this._mode.toString().equals("OFF");
+		if(!canReceive){
+			this._clientsToBeNotified.add(origin.getOwner());
+		}
+		return canReceive;
 	}
 
 	/**
@@ -154,12 +158,12 @@ public abstract class Terminal implements Serializable {
 	 * 
 	 * @return A boolean value.
 	 */
-	public boolean canReciveVoiceCommunication() {
-		boolean canRecive = this._mode.canReciveCommunication();
-		if(!canRecive){
-			_allNotification.add(_notification);
+	public boolean canReciveVoiceCommunication(Terminal origin) {
+		boolean canReceive = this._mode.canReciveCommunication();
+		if(!canReceive){
+			this._clientsToBeNotified.add(origin.getOwner());
 		}
-		return canRecive;
+		return canReceive;
 	}
 
 	/**
@@ -189,7 +193,7 @@ public abstract class Terminal implements Serializable {
 	 * @throws UnsupportedCommunicationExceptionDestination If not supported.
 	 * @return A boolean value.
 	 */
-	public abstract boolean canReciveVideoCommunication()
+	public abstract boolean canReciveVideoCommunication(Terminal origin)
 			throws UnsupportedCommunicationExceptionDestination;
 
 	/**
@@ -214,13 +218,10 @@ public abstract class Terminal implements Serializable {
 	 */
 	public double endOngoingCommunication(int duration) {
 		_currentInteractiveCommunication.setDuration(duration);
-		_currentInteractiveCommunication
-				.setCommunicationStatus(CommunicationStatus.FINISHED);
+		_currentInteractiveCommunication.setCommunicationStatus(CommunicationStatus.FINISHED);
 		this.setMode(this.getPreviousMode());
-		Terminal destination = _currentInteractiveCommunication
-				.getDestination();
-		double price = _currentInteractiveCommunication
-				.getPrice(findFriend(destination.getId()));
+		Terminal destination = _currentInteractiveCommunication.getDestination();
+		double price = _currentInteractiveCommunication.getPrice(findFriend(destination.getId()));
 		_currentInteractiveCommunication.setCost(price);
 		destination.setMode(destination.getPreviousMode());
 		_debt += price;
@@ -273,23 +274,31 @@ public abstract class Terminal implements Serializable {
 	 * @return A boolean value.
 	 */
 	public boolean changeTerminalMode(TerminalMode newMode) {
-		if (Objects.equals(_mode.getName(), newMode.getName())) {
+		if (Objects.equals(_mode.toString(), newMode.toString())) {
 			return false;
 		} else {
-			if (_mode.getName() == "OFF" && newMode.getName() == "IDLE") {
-				_notification = new Notification(NotificationType.O2I);
-			} else if (_mode.getName() == "OFF"
-					&& newMode.getName() == "SILENCE") {
-				_notification = new Notification(NotificationType.O2S);
-			} else if (_mode.getName() == "BUSY"
-					&& newMode.getName() == "IDLE") {
-				_notification = new Notification(NotificationType.B2I);
-			} else if (_mode.getName() == "BUSY"
-					&& newMode.getName() == "SILENCE") {
-				_notification = new Notification(NotificationType.B2S);
-			}
+			_previousMode = _mode;
 			_mode = newMode;
+			this.notificationCreation();
+			this.notifyClient();
 			return true;
+		}
+	}
+	public void notifyClient(){
+		for(Client aClient:_clientsToBeNotified){
+			aClient.addNotifications(_notification);
+		}
+	}
+
+	public void notificationCreation(){
+		if(_previousMode.toString().compareTo("OFF") == 0 && _mode.toString().compareTo("IDLE") == 0){
+			_notification = new Notification(NotificationType.O2I, _id);
+		} else if (_previousMode.toString().compareTo("BUSY") == 0 && _mode.toString().compareTo("IDLE") == 0){
+			_notification = new Notification(NotificationType.B2I, _id);
+		} else if (_previousMode.toString().compareTo("SILENCE") == 0 && _mode.toString().compareTo("IDLE") == 0){
+			_notification = new Notification(NotificationType.S2I, _id);
+		} else if (_previousMode.toString().compareTo("OFF") == 0 && _mode.toString().compareTo("SILENCE") == 0){
+			_notification = new Notification(NotificationType.O2S, _id);
 		}
 	}
 
@@ -404,6 +413,10 @@ public abstract class Terminal implements Serializable {
 		return _previousMode = _mode;
 	}
 
+	protected Notification getNotification() {
+		return _notification;
+	}
+
 	/**
 	 * Converts Terminal Object to a String representation
 	 * 
@@ -414,12 +427,12 @@ public abstract class Terminal implements Serializable {
 	@Override
 	public String toString() {
 		if (!_terminalFriends.isEmpty()) {
-			return String.join("|", _id, _owner.getKey(), _mode.getName(),
+			return String.join("|", _id, _owner.getKey(), _mode.toString(),
 					String.valueOf(Math.round(_payments)),
 					String.valueOf(Math.round(_debt)), String.join(",",
 							_terminalFriends.stream().sorted().toList()));
 		} else {
-			return String.join("|", _id, _owner.getKey(), _mode.getName(),
+			return String.join("|", _id, _owner.getKey(), _mode.toString(),
 					String.valueOf(Math.round(_payments)),
 					String.valueOf(Math.round(_debt)));
 		}
@@ -462,5 +475,4 @@ public abstract class Terminal implements Serializable {
 			return false;
 		return true;
 	}
-
 }

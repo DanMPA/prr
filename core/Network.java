@@ -104,9 +104,11 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 * @throws UnknownKeyException if client don't exist in network.
 	 */
-	public Collection<Notification> showNotifications(String key)
-			throws UnknownKeyException {
-		return findClient(key).getNotifications();
+	public Collection<Notification> showNotifications(String key) throws UnknownKeyException {
+			Collection<Notification> notifications = new ArrayList<>();
+			notifications.addAll(findClient(key).getNotifications());
+			findClient(key).removeNotifications();
+		return notifications;
 	}
 
 	/**
@@ -239,7 +241,7 @@ public class Network implements Serializable {
 			String destinationKey, String message)
 			throws UnknownKeyException, UnavailableEntity {
 		Terminal destination = findTerminal(destinationKey);
-		if (destination.canReciveTextCommunication()) {
+		if (destination.canReciveTextCommunication(origin)) {
 			_allCommunication
 					.add(origin.makeTextCommunication(destination, message));
 		} else {
@@ -255,10 +257,10 @@ public class Network implements Serializable {
 		Terminal destination = findTerminal(destinationKey);
 
 		if (communcticationType.equals("VOICE")
-				&& destination.canReciveVoiceCommunication()) {
+				&& destination.canReciveVoiceCommunication(origin)) {
 			_allCommunication.add(origin.makeVoiceCommunication(destination));
 		} else if (communcticationType.equals("VIDEO")
-				&& destination.canReciveVideoCommunication()) {
+				&& destination.canReciveVideoCommunication(origin)) {
 			_allCommunication.add(origin.makeVideoCommunication(destination));
 		} else {
 			throw new UnavailableEntity(destination.getMode());
@@ -273,6 +275,22 @@ public class Network implements Serializable {
 			}
 		}
 		throw new InvalidCommunicationExpextion(String.valueOf(id));
+	}
+
+	public double getAllDebts() {
+		double totalDebt = 0;
+		for (Client aClient : _clients.values()) {
+			totalDebt += aClient.getDebts();
+		}
+		return totalDebt;
+	}
+
+	public double getAllPayments() {
+		double totalPayments = 0;
+		for (Client aClient : _clients.values()) {
+			totalPayments += aClient.getPayments();
+		}
+		return totalPayments;
 	}
 
 	public boolean validCommunication(Terminal terminal, int id) {

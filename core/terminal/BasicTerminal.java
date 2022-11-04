@@ -29,7 +29,7 @@ public class BasicTerminal extends Terminal {
 	 * @throws UnsupportedCommunicationExceptionDestination
 	 */
 	@Override
-	public boolean canReciveVideoCommunication()
+	public boolean canReciveVideoCommunication(Terminal origin)
 			throws UnsupportedCommunicationExceptionDestination {
 		throw new UnsupportedCommunicationExceptionDestination("VIDEO");
 	}
