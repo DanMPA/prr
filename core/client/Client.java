@@ -190,4 +190,12 @@ public class Client implements Serializable {
 			this._terminalNotifications.add(notification);
 		}
 	}
+
+	public double getBalance(){
+		return _payments - _debts;
+	}
+
+	public void setClientLevel(ClientLevel level){
+		_level = level;
+	}
 }

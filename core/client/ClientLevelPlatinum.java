@@ -3,6 +3,7 @@ package prr.core.client;
 public class ClientLevelPlatinum extends ClientLevel {
 	@Override
 	public double getTextCost(int textLength) {
+		textStreaks++;
 		if (textLength < 50) {
 			return 0;
 		} else {
@@ -18,6 +19,15 @@ public class ClientLevelPlatinum extends ClientLevel {
 	@Override
 	public double getVideoCost(double duration) {
 		return 10 * duration;
+	}
+
+	@Override
+	public void changeLevel(Client client) {
+		if(client.getBalance() < 0){
+			client.setClientLevel(new ClientLevelNormal());
+		} else if(textStreaks >= 2){
+			client.setClientLevel(new ClientLevelGold());
+		}
 	}
 
 }

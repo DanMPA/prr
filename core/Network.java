@@ -244,6 +244,7 @@ public class Network implements Serializable {
 		if (destination.canReciveTextCommunication(origin)) {
 			_allCommunication
 					.add(origin.makeTextCommunication(destination, message));
+			origin.getOwner().getClientLevel().changeLevel(origin.getOwner());
 		} else {
 			throw new UnavailableEntity(destination.getMode());
 		}

@@ -225,7 +225,7 @@ public abstract class Terminal implements Serializable {
 		_currentInteractiveCommunication.setCost(price);
 		destination.setMode(destination.getPreviousMode());
 		_debt += price;
-
+		_owner.getClientLevel().changeLevel(_owner);
 		_currentInteractiveCommunication = null;
 		return price;
 	}
