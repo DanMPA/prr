@@ -180,7 +180,7 @@ public abstract class Terminal implements Serializable {
 		this.addCommunicationMade(newCommunicaiton);
 		this._currentInteractiveCommunication = newCommunicaiton;
 		this.setPreviousMode();
-		this.setMode(new TerminalModeBusy());
+		this.changeTerminalMode(new TerminalModeBusy());
 		destination.setPreviousMode();
 		destination.setMode(new TerminalModeBusy());
 		destination.addCommunicationMade(newCommunicaiton);
@@ -219,11 +219,11 @@ public abstract class Terminal implements Serializable {
 	public double endOngoingCommunication(int duration) {
 		_currentInteractiveCommunication.setDuration(duration);
 		_currentInteractiveCommunication.setCommunicationStatus(CommunicationStatus.FINISHED);
-		this.setMode(this.getPreviousMode());
+		this.changeTerminalMode(this.getPreviousMode());
 		Terminal destination = _currentInteractiveCommunication.getDestination();
 		double price = _currentInteractiveCommunication.getPrice(findFriend(destination.getId()));
 		_currentInteractiveCommunication.setCost(price);
-		destination.setMode(destination.getPreviousMode());
+		destination.changeTerminalMode(destination.getPreviousMode());
 		_debt += price;
 		_owner.getClientLevel().changeLevel(_owner);
 		_currentInteractiveCommunication = null;

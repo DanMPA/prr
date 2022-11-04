@@ -86,11 +86,28 @@ public class Network implements Serializable {
 		return findClient(key).toString();
 	}
 
+	/**
+	 * Show all clients, sorted by the given comparator.
+	 * 
+	 * @param comparatorOfClient A comparator that will be used to sort the
+	 *                           clients.
+	 * @return A collection of clients.
+	 */
 	public Collection<Client> showClients(
 			Comparator<Client> comparatorOfClient) {
 		return ShowEntities.showAll(_clients.values(), comparatorOfClient);
 	}
 
+	/**
+	 * Show all clients, sorted by the given comparator, filtered by the given
+	 * predicate.
+	 * 
+	 * @param comparatorOfClient A comparator that will be used to sort the
+	 *                           clients.
+	 * @param clientFilter       a predicate that filters the clients to be
+	 *                           shown.
+	 * @return A collection of clients.
+	 */
 	public Collection<Client> showClients(Comparator<Client> comparatorOfClient,
 			Predicate<Client> clientFilter) {
 		return ShowEntities.showFiltered(_clients.values(), clientFilter,
@@ -104,10 +121,11 @@ public class Network implements Serializable {
 	 * @return Collection<String>
 	 * @throws UnknownKeyException if client don't exist in network.
 	 */
-	public Collection<Notification> showNotifications(String key) throws UnknownKeyException {
-			Collection<Notification> notifications = new ArrayList<>();
-			notifications.addAll(findClient(key).getNotifications());
-			findClient(key).removeNotifications();
+	public Collection<Notification> showNotifications(String key)
+			throws UnknownKeyException {
+		Collection<Notification> notifications = new ArrayList<>();
+		notifications.addAll(findClient(key).getNotifications());
+		findClient(key).removeNotifications();
 		return notifications;
 	}
 
@@ -204,11 +222,26 @@ public class Network implements Serializable {
 
 	}
 
+	/**
+	 * Show all terminals, sorted by the given comparator.
+	 * 
+	 * @param comparatorOfTerminals a comparator to sort the terminals by.
+	 * @return A collection of terminals.
+	 */
 	public Collection<Terminal> showTerminals(
 			Comparator<Terminal> comparatorOfTerminals) {
 		return ShowEntities.showAll(_terminals.values(), comparatorOfTerminals);
 	}
 
+	/**
+	 * Show all terminals that are not broken, sorted by their name.
+	 * 
+	 * @param coparatorOfTerminals A comparator that will be used to sort the
+	 *                             terminals.
+	 * @param terminalFilter       a predicate that filters the terminals to be
+	 *                             shown.
+	 * @return A collection of terminals.
+	 */
 	public Collection<Terminal> showTerminals(
 			Comparator<Terminal> coparatorOfTerminals,
 			Predicate<Terminal> terminalFilter) {
@@ -216,19 +249,49 @@ public class Network implements Serializable {
 				coparatorOfTerminals);
 	}
 
+	/**
+	 * This function returns a collection of all the communications, sorted by
+	 * the given comparator
+	 * 
+	 * @param compaterOfCommuncations a comparator that will be used to sort the
+	 *                                collection of communications.
+	 * @return A collection of all the communications in the system.
+	 */
 	public Collection<Communication> showCommunications(
 			Comparator<Communication> compaterOfCommuncations) {
 		return ShowEntities.showAll(_allCommunication, compaterOfCommuncations);
 	}
 
+	/**
+	 * Show all communications that satisfy the given predicate, sorted by the
+	 * given comparator.
+	 * 
+	 * @param communicationFilter     A predicate that filters the
+	 *                                communications.
+	 * @param compaterOfCommuncations A comparator that will be used to sort the
+	 *                                result.
+	 * @return A collection of communications.
+	 */
 	public Collection<Communication> showCommunications(
 			Predicate<Communication> communicationFilter,
 			Comparator<Communication> compaterOfCommuncations) {
 		return ShowEntities.showFiltered(_allCommunication, communicationFilter,
 				compaterOfCommuncations);
-
 	}
 
+	/**
+	 * "Show the communications of a client, sorted by a given comparator,
+	 * filtered by a given function."
+	 * 
+	 * 
+	 * @param clientKey               the key of the client whose communications
+	 *                                we want to see
+	 * @param compaterOfCommuncations a comparator that compares two
+	 *                                communications.
+	 * @param terminalCommunications  a function that takes a terminal and
+	 *                                returns a stream of communications.
+	 * @return A list of communications sorted by the comparator.
+	 */
 	public Collection<Communication> showCommunications(String clientKey,
 			Comparator<Communication> compaterOfCommuncations,
 			Function<Terminal, Stream<Communication>> terminalCommunications)
@@ -237,6 +300,16 @@ public class Network implements Serializable {
 				.stream().sorted(compaterOfCommuncations).toList();
 	}
 
+	/**
+	 * If the destination terminal can receive text communication from the
+	 * origin terminal, then add a new text communication to the list of all
+	 * communications and change the level of the owner of the origin terminal.
+	 * 
+	 * @param origin         The terminal that is sending the message.
+	 * @param destinationKey The key of the terminal that will receive the
+	 *                       communication.
+	 * @param message        The message to be sent.
+	 */
 	public void generateTextCommunication(Terminal origin,
 			String destinationKey, String message)
 			throws UnknownKeyException, UnavailableEntity {
@@ -250,6 +323,14 @@ public class Network implements Serializable {
 		}
 	}
 
+	/**
+	 * Generate an interactive communication between two terminals.
+	 * 
+	 * @param origin              The terminal that is initiating the
+	 *                            communication.
+	 * @param destinationKey      The key of the destination terminal.
+	 * @param communcticationType "VOICE" or "VIDEO"
+	 */
 	public void generateInteractiveCommunication(Terminal origin,
 			String destinationKey, String communcticationType)
 			throws UnknownKeyException, UnavailableEntity,
@@ -268,6 +349,12 @@ public class Network implements Serializable {
 		}
 	}
 
+	/**
+	 * Find a communication by its id
+	 * 
+	 * @param id The id of the communication to find.
+	 * @return A communication object.
+	 */
 	public Communication findCommunication(int id)
 			throws InvalidCommunicationExpextion {
 		for (Communication aCommunication : _allCommunication) {
@@ -278,6 +365,11 @@ public class Network implements Serializable {
 		throw new InvalidCommunicationExpextion(String.valueOf(id));
 	}
 
+	/**
+	 * For each client, add their debts to the total debt.
+	 * 
+	 * @return The total debt of all clients.
+	 */
 	public double getAllDebts() {
 		double totalDebt = 0;
 		for (Client aClient : _clients.values()) {
@@ -286,6 +378,12 @@ public class Network implements Serializable {
 		return totalDebt;
 	}
 
+	/**
+	 * For each client in the clients map, add the client's payments to the
+	 * total payments.
+	 * 
+	 * @return The total amount of payments made by all clients.
+	 */
 	public double getAllPayments() {
 		double totalPayments = 0;
 		for (Client aClient : _clients.values()) {
@@ -294,18 +392,30 @@ public class Network implements Serializable {
 		return totalPayments;
 	}
 
+	/**
+	 * If the terminal is valid, then return true.
+	 * 
+	 * @param terminal The terminal that is being used to communicate with the
+	 *                 player.
+	 * @param id       The id of the terminal you want to check.
+	 * @return A boolean value.
+	 */
 	public boolean validCommunication(Terminal terminal, int id) {
 		return terminal.validCommunication(id);
 	}
 
+	/**
+	 * If the communication is valid, pay it.
+	 * 
+	 * @param terminal the terminal that is paying the communication
+	 * @param id       the id of the communication
+	 */
 	public void payCommunication(Terminal terminal, int id)
 			throws InvalidCommunicationExpextion {
 		if (validCommunication(terminal, id)) {
 			terminal.payDebt(findCommunication(id).paidCommunication());
 		}
 	}
-
-	public
 
 	/**
 	 * Read text input file and create corresponding domain entities.
@@ -315,7 +425,7 @@ public class Network implements Serializable {
 	 * @throws IOException                if there is an IO error while
 	 *                                    processing the text file
 	 */
-	void importFile(String filename)
+	public void importFile(String filename)
 			throws UnrecognizedEntryException, IOException {
 		new Parser(this).parseFile(filename);
 	}
