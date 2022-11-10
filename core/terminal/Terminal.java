@@ -60,9 +60,7 @@ public abstract class Terminal implements Serializable {
 	public boolean validCommunication(int id) throws InvalidCommunicationExpextion{
 		for (Communication aCommunication : _communicationsMade) {
 			if (aCommunication.getId() == id) {
-				// if(!aCommunication.isPaid()){
-					return true;
-				// }
+				return true;
 			}
 		}
 		throw new InvalidCommunicationExpextion(String.valueOf(id));
