@@ -419,7 +419,7 @@ public class Network implements Serializable {
 	 * @param id       The id of the terminal you want to check.
 	 * @return A boolean value.
 	 */
-	public boolean validCommunication(Terminal terminal, int id) {
+	public boolean validCommunication(Terminal terminal, int id) throws InvalidCommunicationExpextion{
 		return terminal.validCommunication(id);
 	}
 
@@ -435,7 +435,6 @@ public class Network implements Serializable {
 			terminal.payDebt(findCommunication(id).paidCommunication());
 			terminal.getOwner().getClientLevel()
 					.changeLevel(terminal.getOwner());
-
 		}
 	}
 

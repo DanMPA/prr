@@ -14,6 +14,7 @@ import prr.core.communication.CommunicationStatus;
 import prr.core.communication.InteractiveCommunication;
 import prr.core.communication.TextCommunication;
 import prr.core.communication.VoiceCommunication;
+import prr.core.exception.InvalidCommunicationExpextion;
 import prr.core.exception.UnsupportedCommunicationExceptionDestination;
 import prr.core.exception.UnsupportedCommunicationExceptionOrigin;
 import prr.core.notification.Notification;
@@ -56,13 +57,15 @@ public abstract class Terminal implements Serializable {
 	 * @param id the id of the communication to be validated
 	 * @return A boolean value.
 	 */
-	public boolean validCommunication(int id) {
+	public boolean validCommunication(int id) throws InvalidCommunicationExpextion{
 		for (Communication aCommunication : _communicationsMade) {
 			if (aCommunication.getId() == id) {
-				return true;
+				// if(!aCommunication.isPaid()){
+					return true;
+				// }
 			}
 		}
-		return false;
+		throw new InvalidCommunicationExpextion(String.valueOf(id));
 	}
 
 	/**

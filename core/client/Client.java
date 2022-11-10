@@ -185,11 +185,11 @@ public class Client implements Serializable {
 	 * @return Collection<String> Collection of Notification in string format.
 	 */
 	public Collection<Notification> getNotifications() {
-		return _terminalNotifications;
+		return this._terminalNotifications;
 	}
 
 	public void removeNotifications() {
-		_terminalNotifications.clear();
+		this._terminalNotifications.clear();
 	}
 
 	public void addNotifications(Notification notification) {

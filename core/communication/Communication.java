@@ -47,6 +47,10 @@ public abstract class Communication implements Serializable {
 		return this._origen;
 	}
 
+	public boolean isPaid() {
+		return _isPaid;
+	}
+
 	public Terminal getDestination() {
 		return this._destination;
 	}
