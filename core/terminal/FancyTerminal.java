@@ -35,13 +35,13 @@ public class FancyTerminal extends Terminal {
 	public Communication makeVideoCommunication(Terminal destination) {
 		InteractiveCommunication newCommunicaiton = new VideoCommunication(this,
 				destination);
-		this.addCommunicationMade(newCommunicaiton);
 		this._currentInteractiveCommunication = newCommunicaiton;
 		this.setPreviousMode();
 		this.setMode(new TerminalModeBusy());
+		this.addCommunicationMade(newCommunicaiton);
 		destination.setPreviousMode();
 		destination.setMode(new TerminalModeBusy());
-		destination.addCommunicationMade(newCommunicaiton);
+		destination.addCommunicationRecived(newCommunicaiton);
 		return newCommunicaiton;
 	}
 

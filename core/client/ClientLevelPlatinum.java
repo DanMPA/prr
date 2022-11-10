@@ -27,7 +27,12 @@ public class ClientLevelPlatinum extends ClientLevel {
 			client.setClientLevel(new ClientLevelNormal());
 		} else if(textStreaks >= 2){
 			client.setClientLevel(new ClientLevelGold());
+			textStreaks =0;
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "PLATINUM";
+	}
 }

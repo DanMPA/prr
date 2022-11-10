@@ -124,7 +124,9 @@ public class Network implements Serializable {
 	public Collection<Notification> showNotifications(String key)
 			throws UnknownKeyException {
 		Collection<Notification> notifications = new ArrayList<>();
-		notifications.addAll(findClient(key).getNotifications());
+		if (findClient(key).isReceiveNotification()) {
+			notifications.addAll(findClient(key).getNotifications());
+		}
 		findClient(key).removeNotifications();
 		return notifications;
 	}
@@ -292,12 +294,29 @@ public class Network implements Serializable {
 	 *                                returns a stream of communications.
 	 * @return A list of communications sorted by the comparator.
 	 */
-	public Collection<Communication> showCommunications(String clientKey,
-			Comparator<Communication> compaterOfCommuncations,
-			Function<Terminal, Stream<Communication>> terminalCommunications)
+	public Collection<Communication> showCommunicationsMade(String clientKey,
+			Comparator<Communication> compaterOfCommuncations)
 			throws UnknownKeyException {
-		return findClient(clientKey).getCommunications(terminalCommunications)
-				.stream().sorted(compaterOfCommuncations).toList();
+		Client aClient = findClient(clientKey);
+		List<Communication> allClientsCommunications = new ArrayList<>();
+		for (Terminal aTerminal : aClient.getAssociatedTerminals()) {
+			allClientsCommunications.addAll(aTerminal.getCommunicationsMade());
+		}
+		return allClientsCommunications.stream().sorted(compaterOfCommuncations)
+				.toList();
+	}
+
+	public Collection<Communication> showCommunicationsRecived(String clientKey,
+			Comparator<Communication> compaterOfCommuncations)
+			throws UnknownKeyException {
+		Client aClient = findClient(clientKey);
+		List<Communication> allClientsCommunications = new ArrayList<>();
+		for (Terminal aTerminal : aClient.getAssociatedTerminals()) {
+			allClientsCommunications
+					.addAll(aTerminal.getCommunicationsRecived());
+		}
+		return allClientsCommunications.stream().sorted(compaterOfCommuncations)
+				.toList();
 	}
 
 	/**
@@ -414,6 +433,9 @@ public class Network implements Serializable {
 			throws InvalidCommunicationExpextion {
 		if (validCommunication(terminal, id)) {
 			terminal.payDebt(findCommunication(id).paidCommunication());
+			terminal.getOwner().getClientLevel()
+					.changeLevel(terminal.getOwner());
+
 		}
 	}
 

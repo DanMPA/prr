@@ -28,9 +28,16 @@ public class ClientLevelGold extends ClientLevel {
 	public void changeLevel(Client client) {
 		if(client.getBalance() < 0){
 			client.setClientLevel( new ClientLevelNormal());
+
 		} else if(videoStreaks >= 5){
 			client.setClientLevel(new ClientLevelPlatinum());
+			videoStreaks = 0;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "GOLD";
 	}
 
 }

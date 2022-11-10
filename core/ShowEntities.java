@@ -1,10 +1,13 @@
 package prr.core;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
-public class ShowEntities {
+public class ShowEntities implements Serializable {
+	private static final long serialVersionUID = 202208091753L;
+	
 	private ShowEntities() {
 	}
 

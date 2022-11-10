@@ -33,8 +33,7 @@ public class ClientLevelNormal extends ClientLevel {
 	@Override
 	public void changeLevel(Client client) {
 		if(client.getBalance() > 500){
-			client.setClientLevel(new ClientLevelGold()); ;
+			client.setClientLevel(new ClientLevelGold());
 		}
 	}
-
 }

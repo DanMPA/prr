@@ -25,7 +25,7 @@ public class TextCommunication extends Communication {
 	public double getPrice(boolean isFriends) {
 		if (isFriends) {
 			return (getOrigen().getOwner().getClientLevel()
-					.getTextCost(_message.length())) / 2;
+					.getTextCost(_message.length()));
 		}
 		return getOrigen().getOwner().getClientLevel()
 				.getTextCost(_message.length());

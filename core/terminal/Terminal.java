@@ -38,7 +38,6 @@ public abstract class Terminal implements Serializable {
 	private Notification _notification;
 	protected List<Client> _clientsToBeNotified;
 
-
 	protected Terminal(String id, Client owner) {
 		this._id = id;
 		this._owner = owner;
@@ -124,7 +123,7 @@ public abstract class Terminal implements Serializable {
 	 */
 	public boolean canReciveTextCommunication(Terminal origin) {
 		boolean canReceive = !this._mode.toString().equals("OFF");
-		if(!canReceive){
+		if (!canReceive) {
 			this._clientsToBeNotified.add(origin.getOwner());
 		}
 		return canReceive;
@@ -148,7 +147,9 @@ public abstract class Terminal implements Serializable {
 		destination.addCommunicationRecived(newCommunicaiton);
 		newCommunicaiton.setCost(
 				newCommunicaiton.getPrice(findFriend(destination.getId())));
-		_debt += newCommunicaiton.getCost();
+		double price = newCommunicaiton.getCost();
+		_debt += price;
+		_owner.setDebts(price);
 		return newCommunicaiton;
 	}
 
@@ -160,7 +161,7 @@ public abstract class Terminal implements Serializable {
 	 */
 	public boolean canReciveVoiceCommunication(Terminal origin) {
 		boolean canReceive = this._mode.canReciveCommunication();
-		if(!canReceive){
+		if (!canReceive) {
 			this._clientsToBeNotified.add(origin.getOwner());
 		}
 		return canReceive;
@@ -177,13 +178,13 @@ public abstract class Terminal implements Serializable {
 	public Communication makeVoiceCommunication(Terminal destination) {
 		InteractiveCommunication newCommunicaiton = new VoiceCommunication(this,
 				destination);
-		this.addCommunicationMade(newCommunicaiton);
 		this._currentInteractiveCommunication = newCommunicaiton;
 		this.setPreviousMode();
-		this.changeTerminalMode(new TerminalModeBusy());
+		this.setMode(new TerminalModeBusy());
+		this.addCommunicationMade(newCommunicaiton);
 		destination.setPreviousMode();
 		destination.setMode(new TerminalModeBusy());
-		destination.addCommunicationMade(newCommunicaiton);
+		destination.addCommunicationRecived(newCommunicaiton);
 		return newCommunicaiton;
 	}
 
@@ -218,13 +219,17 @@ public abstract class Terminal implements Serializable {
 	 */
 	public double endOngoingCommunication(int duration) {
 		_currentInteractiveCommunication.setDuration(duration);
-		_currentInteractiveCommunication.setCommunicationStatus(CommunicationStatus.FINISHED);
+		_currentInteractiveCommunication
+				.setCommunicationStatus(CommunicationStatus.FINISHED);
 		this.changeTerminalMode(this.getPreviousMode());
-		Terminal destination = _currentInteractiveCommunication.getDestination();
-		double price = _currentInteractiveCommunication.getPrice(findFriend(destination.getId()));
+		Terminal destination = _currentInteractiveCommunication
+				.getDestination();
+		double price = _currentInteractiveCommunication
+				.getPrice(findFriend(destination.getId()));
 		_currentInteractiveCommunication.setCost(price);
 		destination.changeTerminalMode(destination.getPreviousMode());
 		_debt += price;
+		_owner.setDebts(price);
 		_owner.getClientLevel().changeLevel(_owner);
 		_currentInteractiveCommunication = null;
 		return price;
@@ -284,20 +289,25 @@ public abstract class Terminal implements Serializable {
 			return true;
 		}
 	}
-	public void notifyClient(){
-		for(Client aClient:_clientsToBeNotified){
+
+	public void notifyClient() {
+		for (Client aClient : _clientsToBeNotified) {
 			aClient.addNotifications(_notification);
 		}
 	}
 
-	public void notificationCreation(){
-		if(_previousMode.toString().compareTo("OFF") == 0 && _mode.toString().compareTo("IDLE") == 0){
+	public void notificationCreation() {
+		if (_previousMode.toString().compareTo("OFF") == 0
+				&& _mode.toString().compareTo("IDLE") == 0) {
 			_notification = new Notification(NotificationType.O2I, _id);
-		} else if (_previousMode.toString().compareTo("BUSY") == 0 && _mode.toString().compareTo("IDLE") == 0){
+		} else if (_previousMode.toString().compareTo("BUSY") == 0
+				&& _mode.toString().compareTo("IDLE") == 0) {
 			_notification = new Notification(NotificationType.B2I, _id);
-		} else if (_previousMode.toString().compareTo("SILENCE") == 0 && _mode.toString().compareTo("IDLE") == 0){
+		} else if (_previousMode.toString().compareTo("SILENCE") == 0
+				&& _mode.toString().compareTo("IDLE") == 0) {
 			_notification = new Notification(NotificationType.S2I, _id);
-		} else if (_previousMode.toString().compareTo("OFF") == 0 && _mode.toString().compareTo("SILENCE") == 0){
+		} else if (_previousMode.toString().compareTo("OFF") == 0
+				&& _mode.toString().compareTo("SILENCE") == 0) {
 			_notification = new Notification(NotificationType.O2S, _id);
 		}
 	}
@@ -348,12 +358,12 @@ public abstract class Terminal implements Serializable {
 	}
 
 	/**
-	 * Return a stream of all the communications made by this teminal.
+	 * Return a Collection of all the communications made by this teminal.
 	 * 
-	 * @return A stream of the communications made by the teminal.
+	 * @return A Collection of the communications made by the teminal.
 	 */
-	public Stream<Communication> getCommunicationsMadeStream() {
-		return _communicationsMade.stream();
+	public Collection<Communication> getCommunicationsMade() {
+		return _communicationsMade;
 	}
 
 	/**
@@ -361,8 +371,8 @@ public abstract class Terminal implements Serializable {
 	 * 
 	 * @return A stream of the communications recived by the teminal.
 	 */
-	public Stream<Communication> getCommunicationsRecivedStream() {
-		return _communicationsRecived.stream();
+	public Collection<Communication> getCommunicationsRecived() {
+		return _communicationsRecived;
 	}
 
 	/**
@@ -393,6 +403,7 @@ public abstract class Terminal implements Serializable {
 	public void payDebt(double value) {
 		_payments += value;
 		_debt -= value;
+		_owner.payDebts(value);
 	}
 
 	/**

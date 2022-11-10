@@ -20,8 +20,7 @@ public class VideoCommunication extends InteractiveCommunication {
 	@Override
 	public double getPrice(boolean isFriends) {
 		if (isFriends) {
-			return (getOrigen().getOwner().getClientLevel()
-					.getVideoCost(_duration)) / 2;
+			return (getOrigen().getOwner().getClientLevel().getVideoCost(_duration)) / 2;
 		}
 		return getOrigen().getOwner().getClientLevel().getVideoCost(_duration);
 

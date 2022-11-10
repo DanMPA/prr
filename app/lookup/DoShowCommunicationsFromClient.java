@@ -17,18 +17,17 @@ class DoShowCommunicationsFromClient extends Command<Network> {
 
 	DoShowCommunicationsFromClient(Network receiver) {
 		super(Label.SHOW_COMMUNICATIONS_FROM_CLIENT, receiver);
-		addStringField("ClientId", Message.clientKey());
+		addStringField("clientId", Message.clientKey());
 	}
 
 	@Override
 	protected final void execute() throws CommandException {
 		try {
 			_display.popup(
-					_receiver.showCommunications(stringField("ClientId"),
-							Comparator.comparing(Communication::getId),
-							Terminal::getCommunicationsMadeStream));
+					_receiver.showCommunicationsMade(stringField("clientId"),
+							Comparator.comparing(Communication::getId)));
 		} catch (UnknownKeyException e) {
-			throw new UnknownClientKeyException(stringField("ClientId"));
+			throw new UnknownClientKeyException(stringField("clientId"));
 		}
 	}
 }

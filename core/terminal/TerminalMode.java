@@ -1,6 +1,8 @@
 package prr.core.terminal;
 
-public interface TerminalMode{
+import java.io.Serializable;
+
+public interface TerminalMode extends Serializable{
 	abstract boolean canStartCommunication();
 	abstract boolean canReciveCommunication();
 	abstract boolean canEndCommunication();

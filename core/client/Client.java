@@ -23,7 +23,6 @@ public class Client implements Serializable {
 	private boolean _receiveNotification;
 
 	private Set<Notification> _terminalNotifications;
-
 	private List<Terminal> _associatedTerminals;
 	private double _payments;
 	private double _debts;
@@ -158,6 +157,14 @@ public class Client implements Serializable {
 	public double getDebts() {
 		return _debts;
 	}
+	public double setDebts(double debt) {
+		return _debts += debt;
+	}
+
+	public void payDebts(double value){
+		_payments += value;
+		_debts -= value;
+	}
 
 	public boolean hasDebt() {
 		return _debts > 0;
@@ -178,7 +185,7 @@ public class Client implements Serializable {
 	 * @return Collection<String> Collection of Notification in string format.
 	 */
 	public Collection<Notification> getNotifications() {
-		return _terminalNotifications.stream().toList();
+		return _terminalNotifications;
 	}
 
 	public void removeNotifications() {
@@ -197,5 +204,9 @@ public class Client implements Serializable {
 
 	public void setClientLevel(ClientLevel level){
 		_level = level;
+	}
+
+	public List<Terminal> getAssociatedTerminals() {
+		return _associatedTerminals;
 	}
 }
