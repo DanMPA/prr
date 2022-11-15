@@ -7,9 +7,9 @@ import prr.core.terminal.Terminal;
 public abstract class Communication implements Serializable {
 	private static final long serialVersionUID = 202208091753L;
 
-	private static int _communicationNumber;
+	private static int _communicationNumber = 1;
 
-	private int _id;
+	protected int _id;
 	private boolean _isPaid;
 	protected double _cost;
 	private Terminal _origen;
@@ -18,9 +18,10 @@ public abstract class Communication implements Serializable {
 	private CommunicationStatus _communicationStatus;
 
 	protected Communication(Terminal origen, Terminal destination) {
-		this._id = ++_communicationNumber;
 		this._origen = origen;
 		this._destination = destination;
+		this._id = this._communicationNumber;
+		this._communicationNumber = this._communicationNumber + 1;
 	}
 
 	public abstract String getType();

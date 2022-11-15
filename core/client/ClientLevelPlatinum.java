@@ -25,7 +25,7 @@ public class ClientLevelPlatinum extends ClientLevel {
 	public void changeLevel(Client client) {
 		if(client.getBalance() < 0){
 			client.setClientLevel(new ClientLevelNormal());
-		} else if(textStreaks >= 2){
+		} else if(textStreaks > 2){
 			client.setClientLevel(new ClientLevelGold());
 			textStreaks =0;
 		}

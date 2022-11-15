@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 
 import prr.core.client.Client;
 import prr.core.communication.Communication;
@@ -59,7 +58,7 @@ public abstract class Terminal implements Serializable {
 	 */
 	public boolean validCommunication(int id) throws InvalidCommunicationExpextion{
 		for (Communication aCommunication : _communicationsMade) {
-			if (aCommunication.getId() == id) {
+			if (aCommunication.getId() == id && aCommunication.getSatus() == CommunicationStatus.FINISHED && !aCommunication.isPaid()) {
 				return true;
 			}
 		}
@@ -72,7 +71,7 @@ public abstract class Terminal implements Serializable {
 	 * @return The number of communications made.
 	 */
 	public int getNumberCommunications() {
-		return _communicationsMade.size();
+		return _communicationsMade.size() + _communicationsRecived.size();
 	}
 
 	/**

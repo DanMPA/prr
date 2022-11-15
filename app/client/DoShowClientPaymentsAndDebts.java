@@ -16,16 +16,17 @@ class DoShowClientPaymentsAndDebts extends Command<Network> {
 
 	DoShowClientPaymentsAndDebts(Network receiver) {
 		super(Label.SHOW_CLIENT_BALANCE, receiver);
-		addStringField(clientId, Message.key());
+		addStringField("clientId", Message.key());
 	}
 
 	@Override
 	protected final void execute() throws CommandException {
 		try {
+			String clientId = stringField("clientId");
 			Client tempClient = _receiver.findClient(clientId);
-			Message.clientPaymentsAndDebts(clientId, Math.round(tempClient.getPayments()), Math.round(tempClient.getDebts()));
+			_display.popup(Message.clientPaymentsAndDebts(clientId, Math.round(tempClient.getPayments()), Math.round(tempClient.getDebts())));
 		} catch (UnknownKeyException ex) {
-			throw new UnknownClientKeyException(stringField(clientId));
+			throw new UnknownClientKeyException(clientId);
 		}
 	}
 }
